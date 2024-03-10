@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Header from "../Layout/Header";
 import "./AdminPage.css";
-import photoUrl from "../assets/EC.png";
 import { retrieveAllData, updateDocument } from "../utitlities/services";
 import LoginForm from "../components/LoginForm";
 import PreviewModal from "../components/PreviewModal";
@@ -68,11 +67,6 @@ const AdminPage = () => {
   const toggleModal = (item) => {
     setSelectedItem(item);
     setShowModal(!showModal);
-  };
-
-  // Handle download button click
-  const handleDownload = (id) => {
-    // Implement download functionality
   };
 
   return (

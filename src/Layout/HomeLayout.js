@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Header from './Header';
 import ImageSection from '../components/ImageSection';
-import CustomDropDown from '../components/CustomDropDown';
 import RegistrationForm from '../components/RegistrationForm';
-import IDCardTemplate from '../components/IDTemplate';
 const HomeLayout = () => {
 
 
