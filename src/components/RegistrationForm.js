@@ -167,6 +167,7 @@ const RegistrationForm = () => {
             .catch(e =>{
                 console.log(e);
                 setIsLoading(false);
+                alert("error ", e)
             })
         }
     };
