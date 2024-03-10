@@ -1,0 +1,35 @@
+/* Section styles */
+.section {
+  }
+  
+  /* Section content styles */
+  .section-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  /* Section image styles */
+  .section-image {
+    max-width: 50%; /* Image takes up half of the section width */
+  }
+  
+  /* Section text styles */
+  .section-text {
+    max-width: 50%; /* Text takes up half of the section width */
+  }
+  
+  /* Stack content vertically on smaller screens */
+  @media (max-width: 768px) {
+    .section-content {
+      flex-direction: column; /* Stack content vertically */
+      align-items: center; /* Center content horizontally */
+    }
+  
+    .section-image,
+    .section-text {
+      max-width: 100%; /* Make both image and text full width */
+      margin-bottom: 20px; /* Add spacing between stacked elements */
+    }
+  }
+  

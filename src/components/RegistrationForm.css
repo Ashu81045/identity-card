@@ -1,0 +1,155 @@
+.registration-form-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .profile-photo-container {
+    position: relative;
+    margin-bottom: 20px;
+  }
+  
+  .profile-photo {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-left: 25%;
+  }
+  
+  .default-profile-photo {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    margin: 0 auto;
+    border: 1px solid #f5821f;
+  }
+  
+  .default-profile-photo::before {
+    content: 'Upload Photo';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #888;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.7rem;
+  }
+  
+  input[type='text'] {
+    width: 92%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #ff9933; /* Saffron */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #e68a00; /* Darker saffron */
+  }
+  .drop-down-container {
+    display: flex;
+    flex-direction: column;
+    margin: 1rem 0;
+  }
+  .drop-down-container label {
+    margin : 0.7rem 0rem;
+  }
+  .error {
+    font-size: 12px;
+    font-weight: 400;
+    color:red;
+  }
+  .spinner-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Spinner */
+  .spinner {
+    border: 4px solid rgba(255, 255, 255, 0.3); /* Light semi-transparent white */
+    border-top: 4px solid #ffffff; /* White */
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  /* Modal overlay */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  /* Modal content */
+  .modal-content {
+    background-color: #ffffff; /* White */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* Shadow effect */
+    max-width: 80%;
+    text-align: center;
+    overflow-x: auto;
+    max-height: 90vh;
+  }
+  
+  /* Modal close button */
+  .modal-content button {
+   
+    color: #ffffff; /* White */
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  /* Modal close button hover effect */
+  .modal-content button:hover {
+    background-color: #0056b3; /* Darker blue */
+  }

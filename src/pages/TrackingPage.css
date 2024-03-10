@@ -1,0 +1,42 @@
+.tracking-container {
+    max-width: 400px;
+    margin: auto;
+    padding: 4rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .tracking-heading {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+  }
+  
+  .tracking-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 10px;
+  }
+  
+  .tracking-button {
+    display: block;
+    width: auto; /* Set button width to content width */
+    padding: 10px 20px;
+    background-color: #ff9933; /* Blue color */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    float: right; /* Align button to the right */
+  }
+  .card-track{
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 1rem auto;
+    display: flex;
+    align-items: center;
+    max-width: 488px;
+  }

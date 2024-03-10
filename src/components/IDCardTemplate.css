@@ -1,0 +1,122 @@
+/* IDCardTemplate.css */
+
+.id-card-container {
+    width: 100%; /* Full width */
+    max-width: 210mm; /* Limit to A4 width for larger screens */
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #000; /* Border for the entire ID card */
+    font-family: Arial, sans-serif;
+    box-sizing: border-box;
+  }
+  
+  .header {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap; /* Wrap elements on smaller screens */
+  }
+  
+  .logo {
+    width: 50px;
+    height: auto;
+    margin-right: 20px;
+  }
+  
+  .election-text {
+    text-align: center;
+    flex-basis: 100%; /* Full width on smaller screens */
+  }
+  
+  .election-main {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .election-sub {
+    font-size: 14px;
+  }
+  
+  .photo-section {
+    margin-top: 20px;
+    text-align: center;
+  }
+  
+  .photo {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border: 2px solid #000;
+  }
+  
+  .details-section {
+    margin-top: 20px;
+  }
+  
+  .name {
+    font-size: 18px;
+    font-weight: bold;
+  }
+  
+  .signature-section {
+    margin-top: 20px;
+    text-align: right;
+  }
+  
+  .signature {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .privacy-text {
+    margin-top: 40px;
+    font-size: 12px;
+  }
+  
+  /* Media query for smaller screens */
+  @media screen and (max-width: 768px) {
+    .logo {
+      width: 40px; /* Reduce logo size */
+      margin-right: 10px;
+    }
+  
+    .election-text {
+      font-size: 18px; /* Reduce font size */
+    }
+  
+    .photo {
+      width: 150px; /* Reduce photo size */
+      height: 150px;
+    }
+  
+    .name {
+      font-size: 16px; /* Reduce font size */
+    }
+  
+    .signature {
+      width: 100px; /* Reduce signature size */
+    }
+  
+    .privacy-text {
+      font-size: 10px; /* Reduce font size */
+    }
+  }
+  .detail-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+  }
+  
+  .label {
+    font-weight: bold;
+    margin-right: 5px;
+    width: 50%;
+    text-align: left;
+    font-size: 18px;
+  }
+  .value{
+    font-size: 18px;
+    font-weight: bold;
+    width: 50%;
+    text-align: left;
+}
+  
