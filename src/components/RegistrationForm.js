@@ -5,16 +5,35 @@ import { generateRandomID } from '../utitlities/utility';
 import CustomDropdown from './CustomDropDown';
 import  Modal from './Modal';
 const cityOptions = [
-    { label: 'Araria', value: 'AR' },
-    { label: 'Purnia', value: 'PR' },
-    { label: 'Saharsa', value: 'SA' },
-    { label: 'Madhepura', value: 'MR' },
+    { label: '07-Araria', value: 'AR' },
+    { label: '12-Purnia', value: 'PR' },
+    { label: '40-Kishanganj', value: 'KN' },
 ];
 const KusangOptions = [
-    { label: 'Kushang AS', value: 'AS' },
-    { label: 'Kushang AB', value: 'AB' },
-    { label: 'Kushang AC', value: 'AC' },
-    { label: 'Kushang AD', value: 'AD' },
+    { label: 'KARMIK CELL', value: 'KARMIK CELL' },
+    { label: 'TRANING CELL', value: 'TRANING CELL' },
+    { label: 'MATERIAL CELL', value: 'MATERIAL CELL' },
+    { label: 'DISTRICT COMMUNICATION', value: 'DISTRICT COMMUNICATION' },
+    { label: 'SWEEP', value: 'SWEEP' },
+    { label: 'LAW AND ORDER', value: 'LAW AND ORDER' },
+    { label: 'EVM/VVPAT', value: 'EVM/VVPAT' },
+    { label: 'Adarsh achar sanahita', value: 'Adarsh achar sanahita' },
+    { label: 'Expenditure Monitoring', value: 'Expenditure Monitoring' },
+    { label: 'CONTROL ROOM', value: 'CONTROL ROOM' },
+    { label: 'Postal Ballot', value: 'Postal Ballot' },
+    { label: 'MEDIA /MCMC', value: 'MEDIA /MCMC' },
+    { label: 'STRONG ROOM', value: 'STRONG ROOM' },
+    { label: 'KARMIK KALYAN', value: 'KARMIK KALYAN' },
+    { label: 'Computerization Cell', value: 'Computerization Cell' },
+    { label: 'IT CELL', value: 'IT CELL' },
+    { label: 'DISTRICT CONTROL', value: 'DISTRICT CONTROL' },
+    { label: 'CPMF', value: 'CPMF' },
+    { label: 'DEMP CELL', value: 'DEMP CELL' },
+    { label: 'SINGLE WINDOW', value: 'SINGLE WINDOW' },
+    { label: 'NOMINATION CELL', value: 'NOMINATION CELL' },
+    { label: 'PWDs CELL', value: 'PWDs CELL' },
+    { label: 'OTHER', value: 'OTHER' }
+
 ];
 
 const RegistrationForm = () => {
@@ -34,6 +53,9 @@ const RegistrationForm = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [uniqueID, setUniqueID] = useState('');
+    const [age, setAge] = useState('');
+    const [ageError, setAgeError] = useState('');
+    const [designationError, setDesignationError] = useState('')
 
     const handleDistrictSelect = (option) => {
         setSetDistrict(option.value);
@@ -47,6 +69,10 @@ const RegistrationForm = () => {
         setProfilePhoto('');
         setSetDistrict('');
         setKusangError('');
+        setAge('');
+        setAgeError('');
+        setDesignation('');
+        setDesignationError('');
     }
 
     const closeModal = () => {
@@ -55,7 +81,10 @@ const RegistrationForm = () => {
 
     const handleKushangSelect = (option) => {
         setKushang(option.value);
-        setKusangError(''); // Clear error message when kusang is selected
+        if(option.value){
+            setKusangError(''); // Clear error message when kusang is selected
+        }
+        
     };
 
     const handleNameChange = (event) => {
@@ -81,6 +110,13 @@ const RegistrationForm = () => {
             setBloodGroupError(''); // Clear error message when blood group is entered
         }
     };
+    const handleAgeChange = (event) => {
+        const value = event.target.value;
+        setAge(value);
+        if(value) {
+            setAgeError('');
+        }
+    }
 
     const handleProfilePhotoUpload = (event) => {
         const file = event.target.files[0];
@@ -141,6 +177,21 @@ const RegistrationForm = () => {
         } else {
             setProfilePhotoError('');
         }
+        if(!age){
+            setAgeError('Please enter your age');
+            isValid = false;
+        }else if(age < 18 ){
+            isValid = false;
+            setAgeError('Age should be greater than 18');
+        } else {
+            setAgeError('');
+        }
+        if(!designation){
+            setDesignationError('Please enter your designation');
+            isValid = false;
+        } else {
+            setDesignationError('');
+        }
 
         // If form is valid, submit
         if (isValid) {
@@ -154,8 +205,10 @@ const RegistrationForm = () => {
                 district: district,
                 kusang: kusang,
                 uniqueID:generateRandomID(district),
-                approved:false
+                approved:false,
+                age:age
             };
+            console.log(formData,"formData")
             saveFormData(formData)
             .then((data)=>{
                 setIsLoading(false);
@@ -208,6 +261,11 @@ const RegistrationForm = () => {
                         {phoneError && <span className="error">{phoneError}</span>}
                     </div>
                     <div className="form-group">
+                        <label>Age *:</label>
+                        <input type="text" value={age} onChange={handleAgeChange} />
+                        {ageError && <span className="error">{ageError}</span>}
+                    </div>
+                    <div className="form-group">
                         <label>Blood Group *:</label>
                         <input type="text" value={bloodGroup} onChange={handleBloodGroupChange} />
                         {bloodGroupError && <span className="error">{bloodGroupError}</span>}
@@ -215,6 +273,7 @@ const RegistrationForm = () => {
                     <div className="form-group">
                         <label>Designation *:</label>
                         <input type="text" value={designation} onChange={(e) => setDesignation(e.target.value)} />
+                        {designationError && <span className="error">{designationError}</span>}
                     </div>
                     <button type="submit">Submit</button>
                 </div>

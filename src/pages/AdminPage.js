@@ -5,6 +5,7 @@ import { retrieveAllData, updateDocument } from "../utitlities/services";
 import LoginForm from "../components/LoginForm";
 import PreviewModal from "../components/PreviewModal";
 import IDCardTemplate from "../components/IDTemplate";
+import BulkPDFDownloadButton from "../components/BulkPDFDownload";
 
 const AdminPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -69,9 +70,11 @@ const AdminPage = () => {
     setShowModal(!showModal);
   };
 
+  console.log("selectedItem ", selectedItem)
   return (
     <React.Fragment>
       <Header />
+
       <div style={{ margin: "1rem" }}>
         {/* Search input */}
         {!isLoggedIn && <LoginForm onLogin={handleLogin} />}
@@ -84,6 +87,7 @@ const AdminPage = () => {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
+       <BulkPDFDownloadButton userList={dataList}/>
         {dataList.map((item) => (
           <div className="card">
             <div className="image-container">
