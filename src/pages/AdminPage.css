@@ -57,8 +57,15 @@
       display: none;
     }
   }
+
   .react-datepicker-wrapper{
     margin: 1rem 1rem;
+  }
+
+  @media screen and (max-width: 768px) {
+    button{
+      width: 100% !important;
+    }
   }
   button{
     width: 30%;
@@ -78,6 +85,11 @@
   }
   .kusang-cont .dropdown {
     width: 30%;
+  }
+  @media screen and (max-width: 768px) {
+    .kusang-cont .dropdown {
+      width: 100%;
+    }
   }
   button:disabled {
     opacity: 0.5; /* Reduce opacity to visually indicate that the button is disabled */
