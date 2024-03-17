@@ -22,6 +22,9 @@ export  function generateRandomID (districtCode){
   
 export const extractDate = (str) => {
   // Use regular expression to match the date portion (YYMMDD)
+  if(!str){
+    return null;
+  }
   const match = str.match(/\d{6}/);
   if (match) {
       const dateStr = match[0];

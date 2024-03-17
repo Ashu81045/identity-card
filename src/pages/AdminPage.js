@@ -52,7 +52,7 @@ const AdminPage = () => {
 
 useEffect(() => {
   if (startDate && endDate) {
-    // Filter data based on date range and kusang value
+    // Filter data based on date range and kushang value
     const filtered = dataList.filter((item) => {
       const date = new Date(extractDate(item.uniqueID));
       const isWithinDateRange = date >= startDate && date <= endDate;
@@ -60,11 +60,16 @@ useEffect(() => {
       return isWithinDateRange && isKusangMatched;
     });
     setFilteredData(filtered);
+  } else if (kushang) {
+    // Filter data based on kushang value if no date range selected
+    const filtered = dataList.filter((item) => item.kusang === kushang);
+    setFilteredData(filtered);
   } else {
-    // If no date range selected, show all data
+    // If no date range or kushang selected, show all data
     setFilteredData(dataList);
   }
 }, [startDate, endDate, dataList, kushang]);
+
 
   useEffect(() => {
     setIsLoading(true);
@@ -90,7 +95,7 @@ useEffect(() => {
       alert("You don't have access to this page");
     }
   };
-
+  console.log(kushang, "kushang")
   // Handle approve button click
   const handleApprove = (id) => {
     setIsLoading(true);
