@@ -11,7 +11,6 @@ import "react-datepicker/dist/react-datepicker.css";
 import { extractDate } from "../utitlities/utility";
 import CustomDropdown from "../components/CustomDropDown";
 
-
 const AdminPage = () => {
   const [dataList, setDataList] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -50,72 +49,76 @@ const AdminPage = () => {
     { label: 'OTHER', value: 'OTHER' }
 ];
 
-useEffect(() => {
-  if (startDate && endDate) {
-    // Filter data based on date range and kushang value
-    const filtered = dataList.filter((item) => {
-      const date = new Date(extractDate(item.uniqueID));
-      const isWithinDateRange = date >= startDate && date <= endDate;
-      const isKusangMatched = kushang ? item.kusang === kushang : true;
-      return isWithinDateRange && isKusangMatched;
-    });
-    setFilteredData(filtered);
-  } else if (kushang) {
-    // Filter data based on kushang value if no date range selected
-    const filtered = dataList.filter((item) => item.kusang === kushang);
-    setFilteredData(filtered);
-  } else {
-    // If no date range or kushang selected, show all data
-    setFilteredData(dataList);
-  }
-}, [startDate, endDate, dataList, kushang]);
-
+  useEffect(() => {
+    if (startDate && endDate) {
+      // Filter data based on date range and kushang value
+      const filtered = dataList.filter((item) => {
+        const date = new Date(extractDate(item.uniqueID));
+        const isWithinDateRange = date >= startDate && date <= endDate;
+        const isKusangMatched = kushang ? item.kusang === kushang : true;
+        return isWithinDateRange && isKusangMatched;
+      });
+      setFilteredData(filtered);
+    } else if (kushang) {
+      // Filter data based on kushang value if no date range selected
+      const filtered = dataList.filter((item) => item.kusang === kushang);
+      setFilteredData(filtered);
+    } else {
+      // If no date range or kushang selected, show all data
+      setFilteredData(dataList);
+    }
+  }, [startDate, endDate, dataList, kushang]);
 
   useEffect(() => {
     setIsLoading(true);
     retrieveAllData()
     .then(data => {
-        setIsLoading(false);
-        setDataList(data);
-    }).catch( e =>{
-        setIsLoading(false);
-        console.log(e)
+      setIsLoading(false);
+      setDataList(data);
+    }).catch( e => {
+      setIsLoading(false);
+      console.log(e)
     });
   }, [isLoggedIn]);
 
-  // Filter the list based on the search term and date range
-  
-  console.log(filteredData, "filteredData")
-
   // Handle login logic
   const handleLogin = (mobileNumber, password) => {
-    if((mobileNumber === "9667833075" || "9470062768") && password === "Admin@123"){
+    if ((mobileNumber === "9667833075" || "9470062768") && password === "Admin@123") {
       setIsLoggedIn(true);
-    }else{
+    } else {
       alert("You don't have access to this page");
     }
   };
-  console.log(kushang, "kushang")
+
   // Handle approve button click
   const handleApprove = (id) => {
     setIsLoading(true);
     updateDocument(id, true)
-    .then(()=>{ 
-        setIsLoading(false);
-        alert("You have successfully approved!");
+    .then(() => { 
+      setIsLoading(false);
+      alert("You have successfully approved!");
     })
-    .catch(()=>setIsLoading(false));
+    .catch(() => setIsLoading(false));
   };
-  const handleKushangSelect = (option) => {
-    setKushang(option.value); 
-};
 
   // Handle decline button click
   const handleDecline = (id) => {
     setIsLoading(true);
     updateDocument(id, false)
-    .then(()=> setIsLoading(false))
-    .catch(()=>setIsLoading(false));
+    .then(() => setIsLoading(false))
+    .catch(() => setIsLoading(false));
+  };
+
+  // Handle dropdown select for kushang
+  const handleKushangSelect = (option) => {
+    setKushang(option.value); 
+  };
+
+  // Handle reset button click
+  const handleReset = () => {
+    setStartDate(null);
+    setEndDate(null);
+    setKushang('');
   };
 
   // Toggle modal
@@ -133,32 +136,34 @@ useEffect(() => {
         {isLoggedIn && (
           <React.Fragment>
             <div className="filter-card">
-            <p className="para-text">Please select date range</p>
-            <div className="para-text">
-              <DatePicker
-                selected={startDate}
-                onChange={(date) => setStartDate(date)}
-                selectsStart
-                startDate={startDate}
-                endDate={endDate}
-                placeholderText="From"
-              />
-              <DatePicker
-                selected={endDate}
-                onChange={(date) => setEndDate(date)}
-                selectsEnd
-                startDate={startDate}
-                endDate={endDate}
-                placeholderText="To"
-                minDate={startDate}
-              />
-            </div>
-            <div className="kusang-cont">
+              <p className="para-text">Please select date range</p>
+              <div className="para-text">
+                <DatePicker
+                  selected={startDate}
+                  onChange={(date) => setStartDate(date)}
+                  selectsStart
+                  startDate={startDate}
+                  endDate={endDate}
+                  placeholderText="From"
+                />
+                <DatePicker
+                  selected={endDate}
+                  onChange={(date) => setEndDate(date)}
+                  selectsEnd
+                  startDate={startDate}
+                  endDate={endDate}
+                  placeholderText="To"
+                  minDate={startDate}
+                />
+              </div>
+              <div className="kusang-cont">
                 <label>Select Kusang</label>
                 <CustomDropdown options={KusangOptions} onSelect={handleKushangSelect} />
-            </div>
-            <p className="para-text">Number of ID: {filteredData.length}</p>
-            <BulkPDFDownloadButton userList={filteredData} />
+              </div>
+              <p className="para-text">Number of ID: {filteredData.length}</p>
+              <button className="reset-button" onClick={handleReset}>Reset All filters</button>
+              <BulkPDFDownloadButton userList={filteredData} />
+             
             </div>
             {isLoading && <Spinner />}
             {filteredData.map((item) => (
@@ -175,9 +180,7 @@ useEffect(() => {
                   <p>ID: {item.uniqueID}</p>
                   <p>Status: {item.approved ? "Approved" : "In Progress"}</p>
                   <div className="buttons">
-                    <button onClick={() => handleDecline(item.id)}>
-                      Decline
-                    </button>
+                    <button onClick={() => handleDecline(item.id)}>Decline</button>
                     <button onClick={() => toggleModal(item)}>Approve</button>
                   </div>
                 </div>
