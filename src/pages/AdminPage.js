@@ -6,39 +6,94 @@ import LoginForm from "../components/LoginForm";
 import PreviewModal from "../components/PreviewModal";
 import IDCardTemplate from "../components/IDTemplate";
 import BulkPDFDownloadButton from "../components/BulkPDFDownload";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { extractDate } from "../utitlities/utility";
+import CustomDropdown from "../components/CustomDropDown";
+
 
 const AdminPage = () => {
-  const [searchTerm, setSearchTerm] = useState("");
   const [dataList, setDataList] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [filteredData, setFilteredData] = useState(dataList); // Initialize filteredData with all data
+  const [kushang, setKushang] = useState('');
+
+  const KusangOptions = [
+    { label: 'Adarsh achar sanahita', value: 'Adarsh achar sanahita' },
+    { label: 'CONTROL ROOM', value: 'CONTROL ROOM' },
+    { label: 'CPMF', value: 'CPMF' },
+    { label: 'Computerization Cell', value: 'Computerization Cell' },
+    { label: 'DEMP CELL', value: 'DEMP CELL' },
+    { label: 'DISTRICT COMMUNICATION', value: 'DISTRICT COMMUNICATION' },
+    { label: 'DISTRICT CONTROL', value: 'DISTRICT CONTROL' },
+    { label: 'EVM/VVPAT', value: 'EVM/VVPAT' },
+    { label: 'Expenditure Monitoring', value: 'Expenditure Monitoring' },
+    { label: 'IT CELL', value: 'IT CELL' },
+    { label: 'KARMIK CELL', value: 'KARMIK CELL' },
+    { label: 'KARMIK KALYAN', value: 'KARMIK KALYAN' },
+    { label: 'LAW AND ORDER', value: 'LAW AND ORDER' },
+    { label: 'MEDIA /MCMC', value: 'MEDIA /MCMC' },
+    { label: 'MATERIAL CELL', value: 'MATERIAL CELL' },
+    { label: 'NOMINATION CELL', value: 'NOMINATION CELL' },
+    { label: 'Postal Ballot', value: 'Postal Ballot' },
+    { label: 'PWDs CELL', value: 'PWDs CELL' },
+    { label: 'SECTOR MAGISTRATE', value: 'SECTOR MAGISTRATE' },
+    { label: 'SINGLE WINDOW', value: 'SINGLE WINDOW' },
+    { label: 'STRONG ROOM', value: 'STRONG ROOM' },
+    { label: 'SWEEP', value: 'SWEEP' },
+    { label: 'TRANING CELL', value: 'TRANING CELL' },
+    { label: 'OTHER', value: 'OTHER' }
+];
+
+useEffect(() => {
+  if (startDate && endDate) {
+    // Filter data based on date range and kusang value
+    const filtered = dataList.filter((item) => {
+      const date = new Date(extractDate(item.uniqueID));
+      const isWithinDateRange = date >= startDate && date <= endDate;
+      const isKusangMatched = kushang ? item.kusang === kushang : true;
+      return isWithinDateRange && isKusangMatched;
+    });
+    setFilteredData(filtered);
+  } else {
+    // If no date range selected, show all data
+    setFilteredData(dataList);
+  }
+}, [startDate, endDate, dataList, kushang]);
 
   useEffect(() => {
     setIsLoading(true);
     retrieveAllData()
     .then(data => {
         setIsLoading(false);
-        console.log(data, "data");
         setDataList(data);
-        
     }).catch( e =>{
         setIsLoading(false);
         console.log(e)
     });
   }, [isLoggedIn]);
 
-  // Filter the list based on the search term
-  const filteredData = dataList.filter((item) =>
-    item.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-  console.log(filteredData, "searchData");
+  // Filter the list based on the search term and date range
+  
+  console.log(filteredData, "filteredData")
+
+  // Handle login logic
+  const handleLogin = (mobileNumber, password) => {
+    if((mobileNumber === "9667833075" || "9470062768") && password === "Admin@123"){
+      setIsLoggedIn(true);
+    }else{
+      alert("You don't have access to this page");
+    }
+  };
 
   // Handle approve button click
   const handleApprove = (id) => {
-    setIsLoading(true)
-    console.log(id, "id");
+    setIsLoading(true);
     updateDocument(id, true)
     .then(()=>{ 
         setIsLoading(false);
@@ -46,78 +101,89 @@ const AdminPage = () => {
     })
     .catch(()=>setIsLoading(false));
   };
-
-  const handleLogin = (mobileNumber, password) => {
-    // Handle form submission logic here
-   if((mobileNumber === "9667833075" || "9470062768") && password === "Admin@123"){
-    setIsLoggedIn(true);
-   }else{
-    alert("You don't have access to this page");
-   }
-  };
+  const handleKushangSelect = (option) => {
+    setKushang(option.value); 
+};
 
   // Handle decline button click
   const handleDecline = (id) => {
-    // Implement decline functionality
-    setIsLoading(true)
-    console.log(id, "id");
+    setIsLoading(true);
     updateDocument(id, false)
     .then(()=> setIsLoading(false))
     .catch(()=>setIsLoading(false));
   };
+
+  // Toggle modal
   const toggleModal = (item) => {
     setSelectedItem(item);
     setShowModal(!showModal);
   };
 
-  console.log("selectedItem ", selectedItem)
   return (
     <React.Fragment>
       <Header />
 
       <div style={{ margin: "1rem" }}>
-        {/* Search input */}
         {!isLoggedIn && <LoginForm onLogin={handleLogin} />}
-        {isLoggedIn && <React.Fragment>
-            <div style={{ marginLeft: "0.7rem", width: "101.5%" }}>
-          <input
-            type="text"
-            placeholder="Search by number or unique ID"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-       <BulkPDFDownloadButton userList={dataList}/>
-        {dataList.map((item) => (
-          <div className="card">
-            <div className="image-container">
-              <img
-                src={item.profilePhoto}
-                alt={item.name}
-                className="profile-photo-1"
+        {isLoggedIn && (
+          <React.Fragment>
+            <div className="filter-card">
+            <p className="para-text">Please select date range</p>
+            <div className="para-text">
+              <DatePicker
+                selected={startDate}
+                onChange={(date) => setStartDate(date)}
+                selectsStart
+                startDate={startDate}
+                endDate={endDate}
+                placeholderText="From"
+              />
+              <DatePicker
+                selected={endDate}
+                onChange={(date) => setEndDate(date)}
+                selectsEnd
+                startDate={startDate}
+                endDate={endDate}
+                placeholderText="To"
+                minDate={startDate}
               />
             </div>
-            <div className="details">
-              <h2>{item.name}</h2>
-              <p>ID: {item.uniqueID}</p>
-              <p>Status: {item.approved ? "Approved" : "In Progress"}</p>
-              <div className="buttons">
-                <button onClick={(id) => handleDecline(item.id)}>
-                  Decline
-                </button>
-                <button onClick={(id) => toggleModal(item)}>
-                  Approve
-                </button>
-              </div>
+            <div className="kusang-cont">
+                <label>Select Kusang</label>
+                <CustomDropdown options={KusangOptions} onSelect={handleKushangSelect} />
             </div>
-          </div>
-        ))}
-        </React.Fragment>}
+            <p className="para-text">Number of ID: {filteredData.length}</p>
+            <BulkPDFDownloadButton userList={filteredData} />
+            </div>
+            {isLoading && <Spinner />}
+            {filteredData.map((item) => (
+              <div className="card" key={item.id}>
+                <div className="image-container">
+                  <img
+                    src={item.profilePhoto}
+                    alt={item.name}
+                    className="profile-photo-1"
+                  />
+                </div>
+                <div className="details">
+                  <h2>{item.name}</h2>
+                  <p>ID: {item.uniqueID}</p>
+                  <p>Status: {item.approved ? "Approved" : "In Progress"}</p>
+                  <div className="buttons">
+                    <button onClick={() => handleDecline(item.id)}>
+                      Decline
+                    </button>
+                    <button onClick={() => toggleModal(item)}>Approve</button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </React.Fragment>
+        )}
       </div>
-      {isLoading && <Spinner/>}
       {showModal && (
         <PreviewModal onClose={() => setShowModal(false)}>
-          <IDCardTemplate item={selectedItem} onApprove={handleApprove}/>
+          <IDCardTemplate item={selectedItem} onApprove={handleApprove} />
         </PreviewModal>
       )}
     </React.Fragment>
@@ -125,10 +191,11 @@ const AdminPage = () => {
 };
 
 export default AdminPage;
+
 const Spinner = () => {
-    return (
-      <div className="spinner-overlay">
-        <div className="spinner"></div>
-      </div>
-    );
-  };
+  return (
+    <div className="spinner-overlay">
+      <div className="spinner"></div>
+    </div>
+  );
+};

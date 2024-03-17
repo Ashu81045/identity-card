@@ -194,7 +194,7 @@ const BulkPDFDownloadButton = ({ userList }) => {
   };
 
   return (
-    <button onClick={handleDownload}>Download All PDFs</button>
+    <button disabled={userList.length === 0} onClick={handleDownload}>Download {userList.length} PDFs</button>
   );
 };
 

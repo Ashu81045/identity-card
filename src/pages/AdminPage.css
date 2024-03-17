@@ -57,4 +57,32 @@
       display: none;
     }
   }
+  .react-datepicker-wrapper{
+    margin: 1rem 1rem;
+  }
+  button{
+    width: 30%;
+    margin: 0 auto;
+  }
+  .filter-card{
+    margin: 0 auto;
+    padding: 1rem;
+    border: 1px solid #0c4b0c;
+  }
+  .para-text{
+    text-align: center;
+    font-size: 14px;
+  }
+  .kusang-cont {
+    text-align: center;
+  }
+  .kusang-cont .dropdown {
+    width: 30%;
+  }
+  button:disabled {
+    opacity: 0.5; /* Reduce opacity to visually indicate that the button is disabled */
+    cursor: not-allowed; /* Change cursor to indicate that the button is not clickable */
+    /* Add any other styles to customize the appearance of disabled buttons */
+    background-color: grey;
+  }
   

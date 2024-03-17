@@ -20,6 +20,21 @@ export  function generateRandomID (districtCode){
     return false;
 }
   
-  // Example usage:
-  console.log(generateRandomID('PR')); // Example output: PR23080568
+export const extractDate = (str) => {
+  // Use regular expression to match the date portion (YYMMDD)
+  const match = str.match(/\d{6}/);
+  if (match) {
+      const dateStr = match[0];
+      // Extract year, month, and day from the date string
+      const year = parseInt(dateStr.substring(0, 2)) + 2000; // Assuming year 2000 onwards
+      const month = parseInt(dateStr.substring(2, 4));
+      const day = parseInt(dateStr.substring(4, 6));
+      // Return the extracted date
+      return new Date(year, month - 1, day); // Month is 0-based in JavaScript Date object
+  } else {
+      return null; // Return null if date portion is not found
+  }
+};
+
+
   
