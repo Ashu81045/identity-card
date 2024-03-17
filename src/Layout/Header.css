@@ -16,6 +16,7 @@
   .logo-container {
     display: flex;
     align-items: center;
+    width: 60%;
   }
   .logo-text {
     font-size: 18px;
@@ -42,7 +43,7 @@
       position: absolute;
       top: 60px; /* Adjust as needed */
       left: 0;
-      width: 100%;
+      width: 100% !important;
       background-color: #333;
       padding: 10px 0;
       text-align: center;
@@ -56,6 +57,8 @@
   /* Show menu when the menu is open */
   .menu.open {
     display: flex;
+    width: 20%;
+    justify-content: space-between;
   }
   .menu.close {
     display: none;

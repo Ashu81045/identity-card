@@ -10,31 +10,32 @@ const cityOptions = [
     { label: '40-Kishanganj', value: 'KN' },
 ];
 const KusangOptions = [
-    { label: 'KARMIK CELL', value: 'KARMIK CELL' },
-    { label: 'TRANING CELL', value: 'TRANING CELL' },
-    { label: 'MATERIAL CELL', value: 'MATERIAL CELL' },
-    { label: 'DISTRICT COMMUNICATION', value: 'DISTRICT COMMUNICATION' },
-    { label: 'SWEEP', value: 'SWEEP' },
-    { label: 'LAW AND ORDER', value: 'LAW AND ORDER' },
-    { label: 'EVM/VVPAT', value: 'EVM/VVPAT' },
     { label: 'Adarsh achar sanahita', value: 'Adarsh achar sanahita' },
-    { label: 'Expenditure Monitoring', value: 'Expenditure Monitoring' },
     { label: 'CONTROL ROOM', value: 'CONTROL ROOM' },
-    { label: 'Postal Ballot', value: 'Postal Ballot' },
-    { label: 'MEDIA /MCMC', value: 'MEDIA /MCMC' },
-    { label: 'STRONG ROOM', value: 'STRONG ROOM' },
-    { label: 'KARMIK KALYAN', value: 'KARMIK KALYAN' },
-    { label: 'Computerization Cell', value: 'Computerization Cell' },
-    { label: 'IT CELL', value: 'IT CELL' },
-    { label: 'DISTRICT CONTROL', value: 'DISTRICT CONTROL' },
     { label: 'CPMF', value: 'CPMF' },
+    { label: 'Computerization Cell', value: 'Computerization Cell' },
     { label: 'DEMP CELL', value: 'DEMP CELL' },
-    { label: 'SINGLE WINDOW', value: 'SINGLE WINDOW' },
+    { label: 'DISTRICT COMMUNICATION', value: 'DISTRICT COMMUNICATION' },
+    { label: 'DISTRICT CONTROL', value: 'DISTRICT CONTROL' },
+    { label: 'EVM/VVPAT', value: 'EVM/VVPAT' },
+    { label: 'Expenditure Monitoring', value: 'Expenditure Monitoring' },
+    { label: 'IT CELL', value: 'IT CELL' },
+    { label: 'KARMIK CELL', value: 'KARMIK CELL' },
+    { label: 'KARMIK KALYAN', value: 'KARMIK KALYAN' },
+    { label: 'LAW AND ORDER', value: 'LAW AND ORDER' },
+    { label: 'MEDIA /MCMC', value: 'MEDIA /MCMC' },
+    { label: 'MATERIAL CELL', value: 'MATERIAL CELL' },
     { label: 'NOMINATION CELL', value: 'NOMINATION CELL' },
+    { label: 'Postal Ballot', value: 'Postal Ballot' },
     { label: 'PWDs CELL', value: 'PWDs CELL' },
+    { label: 'SECTOR MAGISTRATE', value: 'SECTOR MAGISTRATE' },
+    { label: 'SINGLE WINDOW', value: 'SINGLE WINDOW' },
+    { label: 'STRONG ROOM', value: 'STRONG ROOM' },
+    { label: 'SWEEP', value: 'SWEEP' },
+    { label: 'TRANING CELL', value: 'TRANING CELL' },
     { label: 'OTHER', value: 'OTHER' }
-
 ];
+
 
 const RegistrationForm = () => {
     const [name, setName] = useState('');
@@ -55,7 +56,10 @@ const RegistrationForm = () => {
     const [uniqueID, setUniqueID] = useState('');
     const [age, setAge] = useState('');
     const [ageError, setAgeError] = useState('');
-    const [designationError, setDesignationError] = useState('')
+    const [designationError, setDesignationError] = useState('');
+    const [otherKusang, setOtherKusang] = useState('');
+    const [otherKusangError, setOtherKusangError] = useState('');
+
 
     const handleDistrictSelect = (option) => {
         setSetDistrict(option.value);
@@ -85,6 +89,14 @@ const RegistrationForm = () => {
             setKusangError(''); // Clear error message when kusang is selected
         }
         
+    };
+    
+    const handleOtherKusangChange = (event) => {
+        const value = event.target.value;
+        setOtherKusang(value);
+        if (value.length >= 3) {
+            setOtherKusangError(''); // Clear error message when name is at least 3 characters long
+        }
     };
 
     const handleNameChange = (event) => {
@@ -118,17 +130,75 @@ const RegistrationForm = () => {
         }
     }
 
-    const handleProfilePhotoUpload = (event) => {
+    const handleProfilePhotoUpload = async (event) => {
         const file = event.target.files[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onload = () => {
-                setProfilePhoto(reader.result);
+            try {
+                // Load the image as a data URL
+                const imageDataUrl = await readFileAsDataURL(file);
+    
+                // Compress the image
+                const compressedImageDataUrl = await compressImage(imageDataUrl);
+    
+                // Set the compressed image as the profile photo
+                setProfilePhoto(compressedImageDataUrl);
                 setProfilePhotoError(''); // Clear error message when profile photo is uploaded
-            };
-            reader.readAsDataURL(file);
+            } catch (error) {
+                console.error('Error compressing image:', error);
+                // Handle error
+            }
         }
     };
+    
+    // Function to read file as data URL
+    const readFileAsDataURL = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = (error) => reject(error);
+            reader.readAsDataURL(file);
+        });
+    };
+    
+    // Function to compress image
+    const compressImage = (imageDataUrl) => {
+        return new Promise((resolve, reject) => {
+            const image = new Image();
+            image.onload = () => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+    
+                // Calculate the new width and height to maintain aspect ratio
+                const maxWidth = 800; // Maximum width
+                const maxHeight = 600; // Maximum height
+                let newWidth = image.width;
+                let newHeight = image.height;
+                if (newWidth > maxWidth) {
+                    newHeight *= maxWidth / newWidth;
+                    newWidth = maxWidth;
+                }
+                if (newHeight > maxHeight) {
+                    newWidth *= maxHeight / newHeight;
+                    newHeight = maxHeight;
+                }
+    
+                // Resize the canvas
+                canvas.width = newWidth;
+                canvas.height = newHeight;
+    
+                // Draw the image on the canvas with the new dimensions
+                ctx.drawImage(image, 0, 0, newWidth, newHeight);
+    
+                // Get the compressed image as a data URL
+                const compressedImageDataUrl = canvas.toDataURL('image/jpeg', 0.7); // Adjust quality as needed
+    
+                resolve(compressedImageDataUrl);
+            };
+            image.onerror = (error) => reject(error);
+            image.src = imageDataUrl;
+        });
+    };
+    
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -148,6 +218,12 @@ const RegistrationForm = () => {
             isValid = false;
         } else {
             setKusangError('');
+        }
+        if (!otherKusang) {
+            setOtherKusangError('You must specify Kushang as you selected OTHER.');
+            isValid = false;
+        } else {
+            setOtherKusangError('');
         }
 
         if (!name || name.length < 3) {
@@ -196,6 +272,7 @@ const RegistrationForm = () => {
         // If form is valid, submit
         if (isValid) {
             setIsLoading(true);
+            let finalKusang = kusang ==='OTHER' ? `OTHER:${otherKusang}`: kusang;
             let formData = {
                 name: name,
                 phone: phone,
@@ -203,7 +280,7 @@ const RegistrationForm = () => {
                 designation: designation,
                 profilePhoto: profilePhoto,
                 district: district,
-                kusang: kusang,
+                kusang: finalKusang,
                 uniqueID:generateRandomID(district),
                 approved:false,
                 age:age
@@ -232,12 +309,21 @@ const RegistrationForm = () => {
                 <label>Select District</label>
                 <CustomDropdown options={cityOptions} onSelect={handleDistrictSelect} />
                 {districtError && <span className="error">{districtError}</span>}
+                
             </div>
             <div className='drop-down-container'>
                 <label>Select Kusang</label>
                 <CustomDropdown options={KusangOptions} onSelect={handleKushangSelect} />
                 {kusangError && <span className="error">{kusangError}</span>}
             </div>
+            {kusang === "OTHER" && (
+                <div className="form-group">
+                    <label>Please add kusang *:</label>
+                    <input type="text" value={otherKusang} onChange={handleOtherKusangChange} />
+                    {otherKusangError && <span className="error">{otherKusangError}</span>}
+                </div>
+            )}
+
             {isLoading && <Spinner/>}
             <form onSubmit={handleSubmit}>
                 <div className="profile-photo-container">

@@ -7,7 +7,7 @@ const ImageSection = () => {
     <section className="section">
       <div className="section-content">
       <div className="section-text">
-          <h2>LOK SABHA ELCECTION - 2024</h2>        
+          <h2>GENERAL LOK SABHA ELECTION - 2024</h2>        
         </div>
         {/* Image on the left */}
         <img src={sectionImage} alt="Section" className="section-image" />
