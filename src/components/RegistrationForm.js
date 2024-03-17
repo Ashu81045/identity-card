@@ -102,7 +102,7 @@ const RegistrationForm = () => {
     const handleNameChange = (event) => {
         const value = event.target.value;
         setName(value);
-        if (value.length >= 3) {
+        if (value.length >= 2) {
             setNameError(''); // Clear error message when name is at least 3 characters long
         }
     };
@@ -219,11 +219,13 @@ const RegistrationForm = () => {
         } else {
             setKusangError('');
         }
-        if (!otherKusang) {
-            setOtherKusangError('You must specify Kushang as you selected OTHER.');
-            isValid = false;
-        } else {
-            setOtherKusangError('');
+        if(kusang === 'OTHER'){
+            if (!otherKusang) {
+                setOtherKusangError('You must specify Kushang as you selected OTHER.');
+                isValid = false;
+            } else {
+                setOtherKusangError('');
+            }
         }
 
         if (!name || name.length < 3) {
