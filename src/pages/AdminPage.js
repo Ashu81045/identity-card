@@ -53,21 +53,22 @@ const AdminPage = () => {
     if (startDate && endDate) {
       // Filter data based on date range and kushang value
       const filtered = dataList.filter((item) => {
-        const date = new Date(extractDate(item.uniqueID));
-        const isWithinDateRange = date >= startDate && date <= endDate;
-        const isKusangMatched = kushang ? item.kusang === kushang : true;
-        return isWithinDateRange && isKusangMatched;
+          const date = new Date(extractDate(item.uniqueID));
+          const isWithinDateRange = date >= startDate && date <= endDate;
+          const isKusangMatched = kushang ? 
+              (item.kusang === kushang || (kushang.startsWith("OTHER") && item.kusang.startsWith("OTHER"))) : true;
+          return isWithinDateRange && isKusangMatched;
       });
       setFilteredData(filtered);
-    } else if (kushang) {
+  } else if (kushang) {
       // Filter data based on kushang value if no date range selected
-      const filtered = dataList.filter((item) => item.kusang === kushang);
+      const filtered = dataList.filter((item) => item.kusang === kushang || (kushang.startsWith("OTHER") && item.kusang.startsWith("OTHER:")));
       setFilteredData(filtered);
-    } else {
+  } else {
       // If no date range or kushang selected, show all data
       setFilteredData(dataList);
-    }
-  }, [startDate, endDate, dataList, kushang]);
+  }
+    }, [startDate, endDate, dataList, kushang]);
 
   useEffect(() => {
     setIsLoading(true);
