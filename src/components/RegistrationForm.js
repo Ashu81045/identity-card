@@ -7,7 +7,7 @@ import  Modal from './Modal';
 const cityOptions = [
     { label: '07-Araria', value: 'AR' },
     { label: '12-Purnia', value: 'PR' },
-    { label: '40-Kishanganj', value: 'KN' },
+    { label: '10-Kishanganj', value: 'KN' },
 ];
 const KusangOptions = [
     { label: 'Adarsh achar sanahita', value: 'Adarsh achar sanahita' },

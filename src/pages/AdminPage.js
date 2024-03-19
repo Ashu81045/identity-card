@@ -46,6 +46,7 @@ const AdminPage = () => {
     { label: 'STRONG ROOM', value: 'STRONG ROOM' },
     { label: 'SWEEP', value: 'SWEEP' },
     { label: 'TRANING CELL', value: 'TRANING CELL' },
+    { label: 'ACTIVE MEDIA GROUP', value: 'ACTIVE MEDIA GROUP' },
     { label: 'OTHER', value: 'OTHER' }
 ];
 
