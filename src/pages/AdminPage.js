@@ -23,7 +23,8 @@ const AdminPage = () => {
   const [kushang, setKushang] = useState('');
 
   const KusangOptions = [
-    { label: 'Adarsh achar sanahita', value: 'Adarsh achar sanahita' },
+    { label: 'ACTIVE MEDIA GROUP', value: 'ACTIVE MEDIA GROUP' },
+    { label: 'ADARSH ACHAR SANHITA', value: 'ADARSH ACHAR SANHITA' },
     { label: 'CONTROL ROOM', value: 'CONTROL ROOM' },
     { label: 'CPMF', value: 'CPMF' },
     { label: 'Computerization Cell', value: 'Computerization Cell' },
@@ -46,7 +47,6 @@ const AdminPage = () => {
     { label: 'STRONG ROOM', value: 'STRONG ROOM' },
     { label: 'SWEEP', value: 'SWEEP' },
     { label: 'TRANING CELL', value: 'TRANING CELL' },
-    { label: 'ACTIVE MEDIA GROUP', value: 'ACTIVE MEDIA GROUP' },
     { label: 'OTHER', value: 'OTHER' }
 ];
 

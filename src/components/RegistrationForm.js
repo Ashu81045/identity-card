@@ -10,7 +10,8 @@ const cityOptions = [
     { label: '10-Kishanganj', value: 'KN' },
 ];
 const KusangOptions = [
-    { label: 'Adarsh achar sanahita', value: 'Adarsh achar sanahita' },
+    { label: 'ACTIVE MEDIA GROUP', value: 'ACTIVE MEDIA GROUP' },
+    { label: 'ADARSH ACHAR SANHITA', value: 'ADARSH ACHAR SANHITA' },
     { label: 'CONTROL ROOM', value: 'CONTROL ROOM' },
     { label: 'CPMF', value: 'CPMF' },
     { label: 'Computerization Cell', value: 'Computerization Cell' },
