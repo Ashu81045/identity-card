@@ -3,12 +3,13 @@ import { jsPDF } from 'jspdf';
 
 // Import the watermark image
 import watermarkImage from '../assets/EC.png';
+import watermarkEC from "../assets/WatermarkElection.png";
 
 const generatePDF = (userList) => {
+
   const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
   doc.addFileToVFS('Tinos-Regular.ttf', 'Roboto-Regular');
   doc.addFont('Tinos-Bold.ttf', 'Roboto-Regular', 'normal');
-
   // Load the Roboto Bold font
   doc.addFileToVFS('Roboto-Bold.ttf', 'Roboto-Bold');
   doc.addFont('Roboto-Bold.ttf', 'Roboto-Bold', 'bold');
@@ -43,9 +44,7 @@ const generatePDF = (userList) => {
     const rowIndex = rowsAdded % maxRowsPerPage;
     const x = marginLeft + (columnIndex * (cardWidth + gutterX));
     const y = marginTop + (rowIndex * (cardHeight + gutterY));
-    const opacityValue = 0.1;
-   
-
+  
     // Draw card border
     
     //doc.setFillColor(173, 216, 230); // Light blue background color
@@ -67,7 +66,8 @@ const generatePDF = (userList) => {
     doc.setFont(undefined, "bold");
     doc.setTextColor(255); // White font color
     doc.text('Identity Card', rectangleX + identityCardWidth / 2, rectangleY + 6, null, null, 'center');
-    doc.addImage(watermarkImage, 'PNG', x, y + 2, 10, 10, undefined, undefined, undefined, undefined, undefined, undefined, undefined, opacityValue);
+    doc.addImage(watermarkImage, 'PNG', x, y + 2, 10, 10, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+    doc.addImage(watermarkEC, 'PNG', x + 20, y + 15, 40, 40, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
     doc.setFontSize(9);
     doc.setFont(undefined, "bold");
     doc.setTextColor(255);
@@ -75,7 +75,7 @@ const generatePDF = (userList) => {
     // Left column
     
     doc.setTextColor(0, 0, 128);
-    doc.setFontSize(9);
+    doc.setFontSize(10);
     doc.text(`${(user.name).toUpperCase()}`, x + cardWidth / 2, y + 19, null, null, 'center');
     doc.setFontSize(7);
     doc.setTextColor(0, 0, 0);
