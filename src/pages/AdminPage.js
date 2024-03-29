@@ -10,8 +10,10 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { extractDate } from "../utitlities/utility";
 import CustomDropdown from "../components/CustomDropDown";
+import UpdateSignature from "../components/UpdateSignature";
 
 const AdminPage = () => {
+  
   const [dataList, setDataList] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -21,6 +23,13 @@ const AdminPage = () => {
   const [endDate, setEndDate] = useState(null);
   const [filteredData, setFilteredData] = useState(dataList); // Initialize filteredData with all data
   const [kushang, setKushang] = useState('');
+  const [district, setDistrict] = useState('');
+
+  const cityOptions = [
+    { label: "Araria", value: "AR" },
+    { label: "Purnia", value: "PR" },
+    { label: "Kishanganj", value: "KN" },
+  ];
 
   const KusangOptions = [
     { label: 'ACTIVE MEDIA GROUP', value: 'ACTIVE MEDIA GROUP' },
@@ -50,26 +59,37 @@ const AdminPage = () => {
     { label: 'OTHER', value: 'OTHER' }
 ];
 
-  useEffect(() => {
-    if (startDate && endDate) {
-      // Filter data based on date range and kushang value
+useEffect(() => {
+  if (startDate && endDate) {
+      // Filter data based on date range, district, and Kushang value
       const filtered = dataList.filter((item) => {
           const date = new Date(extractDate(item.uniqueID));
           const isWithinDateRange = date >= startDate && date <= endDate;
-          const isKusangMatched = kushang ? 
-              (item.kusang === kushang || (kushang.startsWith("OTHER") && item.kusang.startsWith("OTHER"))) : true;
-          return isWithinDateRange && isKusangMatched;
+          const isKushangMatched = kushang ?
+              (item.kusang === kushang || (kushang.startsWith("OTHER") && item.kusang.startsWith("OTHER:"))) :
+              true;
+          const isDistrictMatched = district ? item.district === district : true;
+          return isWithinDateRange && isKushangMatched && isDistrictMatched;
       });
       setFilteredData(filtered);
   } else if (kushang) {
-      // Filter data based on kushang value if no date range selected
-      const filtered = dataList.filter((item) => item.kusang === kushang || (kushang.startsWith("OTHER") && item.kusang.startsWith("OTHER:")));
+      // Filter data based on Kushang value and district if no date range selected
+      const filtered = dataList.filter((item) => {
+          const isKushangMatched = item.kusang === kushang || (kushang.startsWith("OTHER") && item.kusang.startsWith("OTHER:"));
+          const isDistrictMatched = district ? item.district === district : true;
+          return isKushangMatched && isDistrictMatched;
+      });
+      setFilteredData(filtered);
+  } else if (district) {
+      // Filter data based on district if no date range or Kushang selected
+      const filtered = dataList.filter((item) => item.district === district);
       setFilteredData(filtered);
   } else {
-      // If no date range or kushang selected, show all data
+      // If no date range, Kushang, or district selected, show all data
       setFilteredData(dataList);
   }
-    }, [startDate, endDate, dataList, kushang]);
+}, [startDate, endDate, dataList, kushang, district]);
+
 
   useEffect(() => {
     setIsLoading(true);
@@ -115,12 +135,16 @@ const AdminPage = () => {
   const handleKushangSelect = (option) => {
     setKushang(option.value); 
   };
+  const handleDistrictSelect = (option) =>{
+    setDistrict(option.value);
+  }
 
   // Handle reset button click
   const handleReset = () => {
     setStartDate(null);
     setEndDate(null);
     setKushang('');
+    setDistrict('');
   };
 
   // Toggle modal
@@ -138,6 +162,7 @@ const AdminPage = () => {
         {isLoggedIn && (
           <React.Fragment>
             <div className="filter-card">
+              <div className="filter-class">
               <p className="para-text">Please select date range</p>
               <div className="para-text">
                 <DatePicker
@@ -159,12 +184,21 @@ const AdminPage = () => {
                 />
               </div>
               <div className="kusang-cont">
+                <label>Select District</label>
+                <CustomDropdown options={cityOptions} onSelect={handleDistrictSelect} />
+              </div>
+              <div className="kusang-cont">
                 <label>Select Kusang</label>
                 <CustomDropdown options={KusangOptions} onSelect={handleKushangSelect} />
               </div>
               <p className="para-text">Number of ID: {filteredData.length}</p>
               <button className="reset-button" onClick={handleReset}>Reset All filters</button>
               <BulkPDFDownloadButton userList={filteredData} />
+              </div>
+              <div className="seperator"/>
+              <div className="signature-class">
+                <UpdateSignature/>
+              </div>
              
             </div>
             {isLoading && <Spinner />}

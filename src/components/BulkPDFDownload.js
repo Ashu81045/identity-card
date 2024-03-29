@@ -105,7 +105,7 @@ const generatePDF = (userList) => {
     const signatureX = x + cardWidth - 2;
     const signatureY = y + cardHeight - 2; // Bottom right corner
     doc.text('..........................................', signatureX - 2, signatureY - 6, null, null, 'right');
-    doc.text('(Signature & seal of DEO)', signatureX - 2 , signatureY - 2, null, null, 'right');
+    doc.text('(Signature & seal)', signatureX - 2 , signatureY - 2, null, null, 'right');
 
     // Increment cardsAdded counter
     cardsAdded++;

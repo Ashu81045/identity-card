@@ -4,8 +4,9 @@ import { saveFormData } from '../utitlities/services';
 import { generateRandomID } from '../utitlities/utility';
 import CustomDropdown from './CustomDropDown';
 import  Modal from './Modal';
+import { compressImage,readFileAsDataURL } from '../utitlities/utility';
 const cityOptions = [
-    { label: '07-Araria', value: 'AR' },
+    { label: '09-Araria', value: 'AR' },
     { label: '12-Purnia', value: 'PR' },
     { label: '10-Kishanganj', value: 'KN' },
 ];
@@ -137,7 +138,6 @@ const RegistrationForm = () => {
             try {
                 // Load the image as a data URL
                 const imageDataUrl = await readFileAsDataURL(file);
-    
                 // Compress the image
                 const compressedImageDataUrl = await compressImage(imageDataUrl);
     
@@ -149,55 +149,6 @@ const RegistrationForm = () => {
                 // Handle error
             }
         }
-    };
-    
-    // Function to read file as data URL
-    const readFileAsDataURL = (file) => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = (error) => reject(error);
-            reader.readAsDataURL(file);
-        });
-    };
-    
-    // Function to compress image
-    const compressImage = (imageDataUrl) => {
-        return new Promise((resolve, reject) => {
-            const image = new Image();
-            image.onload = () => {
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-    
-                // Calculate the new width and height to maintain aspect ratio
-                const maxWidth = 800; // Maximum width
-                const maxHeight = 600; // Maximum height
-                let newWidth = image.width;
-                let newHeight = image.height;
-                if (newWidth > maxWidth) {
-                    newHeight *= maxWidth / newWidth;
-                    newWidth = maxWidth;
-                }
-                if (newHeight > maxHeight) {
-                    newWidth *= maxHeight / newHeight;
-                    newHeight = maxHeight;
-                }
-    
-                // Resize the canvas
-                canvas.width = newWidth;
-                canvas.height = newHeight;
-    
-                // Draw the image on the canvas with the new dimensions
-                ctx.drawImage(image, 0, 0, newWidth, newHeight);
-    
-                // Get the compressed image as a data URL
-                const compressedImageDataUrl = canvas.toDataURL('image/jpeg', 0.7); // Adjust quality as needed
-    
-                resolve(compressedImageDataUrl);
-            };
-            image.onerror = (error) => reject(error);
-            image.src = imageDataUrl;
-        });
     };
     
 
