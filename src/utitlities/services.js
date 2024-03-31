@@ -137,3 +137,83 @@ export async function searchDocumentByPhoneNumber(phoneNumber) {
     throw error;
   }
 }
+// Method to add initial kushang options to Firestore
+// export const addInitialKushangOptions = async (kushangOptions) => {
+//   const firestore = initializeFirestore();
+//   try {
+//     const kushangOptionsRef = collection(firestore, 'kushangOptions');
+//     await Promise.all(
+//       kushangOptions.map(async (option) => {
+//         await addDoc(kushangOptionsRef, option);
+//       })
+//     );
+//     console.log('Initial kushang options added to Firestore');
+//   } catch (error) {
+//     console.error('Error adding initial kushang options: ', error);
+//   }
+// };
+export const addInitialKushangOptions = async (kushangOptions) => {
+  const firestore = initializeFirestore();
+  try {
+    const kushangOptionsRef = collection(firestore, 'kushangOptions');
+
+    await Promise.all(
+      kushangOptions.map(async (option) => {
+        // Check if option already exists
+        const optionQuery = query(kushangOptionsRef, where('value', '==', option.value));
+        const querySnapshot = await getDocs(optionQuery);
+
+        if (querySnapshot.empty) {
+          // Option does not exist, add it to Firestore
+          await addDoc(kushangOptionsRef, option);
+        } else {
+          // Option already exists, do not add it
+          console.log(`Option "${option.value}" already exists in Firestore, skipping...`);
+        }
+      })
+    );
+    console.log('Initial kushang options added to Firestore');
+  } catch (error) {
+    console.error('Error adding initial kushang options: ', error);
+  }
+};
+
+// Method to update kushang options in Firestore
+export const updateKushangOptions = async (newKushangOptions) => {
+  const firestore = initializeFirestore();
+  try {
+    const kushangOptionsRef = doc(firestore, 'kushangOptions', 'kushangOptionsId');
+    await updateDoc(kushangOptionsRef, { options: newKushangOptions });
+    console.log('Kushang options updated in Firestore');
+  } catch (error) {
+    console.error('Error updating kushang options: ', error);
+  }
+};
+
+// Method to add initial district options to Firestore
+export const addInitialDistrictOptions = async (districtOptions) => {
+  const firestore = initializeFirestore();
+  try {
+    const districtOptionsRef = collection(firestore, 'districtOptions');
+    await Promise.all(
+      districtOptions.map(async (option) => {
+        await addDoc(districtOptionsRef, option);
+      })
+    );
+    console.log('Initial district options added to Firestore');
+  } catch (error) {
+    console.error('Error adding initial district options: ', error);
+  }
+};
+
+// Method to update district options in Firestore
+export const updateDistrictOptions = async (newDistrictOptions) => {
+  const firestore = initializeFirestore();
+  try {
+    const districtOptionsRef = doc(firestore, 'districtOptions', 'districtOptionsId');
+    await updateDoc(districtOptionsRef, { options: newDistrictOptions });
+    console.log('District options updated in Firestore');
+  } catch (error) {
+    console.error('Error updating district options: ', error);
+  }
+};

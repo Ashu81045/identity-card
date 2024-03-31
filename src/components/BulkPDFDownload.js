@@ -17,7 +17,7 @@ const generatePDF = (userList) => {
   const allDistrict = {
     AR: "09-Araria",
     PR: "12-Purnia",
-    KN: "40-Kishanganj"
+    KN: "10-Kishanganj"
   }
 
   // Import the watermark image

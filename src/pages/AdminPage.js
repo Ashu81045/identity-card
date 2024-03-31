@@ -11,6 +11,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { extractDate } from "../utitlities/utility";
 import CustomDropdown from "../components/CustomDropDown";
 import UpdateSignature from "../components/UpdateSignature";
+//import { addInitialDistrictOptions, addInitialKushangOptions } from "../utitlities/services";
 
 const AdminPage = () => {
   
@@ -138,6 +139,10 @@ useEffect(() => {
   const handleDistrictSelect = (option) =>{
     setDistrict(option.value);
   }
+  // const setInitialValue = () =>{
+  //   addInitialDistrictOptions(cityOptions);
+  // addInitialKushangOptions(KusangOptions);
+  // }
 
   // Handle reset button click
   const handleReset = () => {
@@ -156,7 +161,6 @@ useEffect(() => {
   return (
     <React.Fragment>
       <Header />
-
       <div style={{ margin: "1rem" }}>
         {!isLoggedIn && <LoginForm onLogin={handleLogin} />}
         {isLoggedIn && (
