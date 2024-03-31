@@ -71,7 +71,7 @@ const generatePDF = (userList) => {
     doc.setFontSize(9);
     doc.setFont(undefined, "bold");
     doc.setTextColor(255);
-    doc.textWithLink(`GENERAL LOK SABHA ELECTION- 2024`, x + 13, y + 11, { url: '' });
+    doc.textWithLink(`LOK SABHA GENERAL ELECTION- 2024`, x + 13, y + 11, { url: '' });
     // Left column
     
     doc.setTextColor(0, 0, 128);
@@ -105,7 +105,7 @@ const generatePDF = (userList) => {
     const signatureX = x + cardWidth - 2;
     const signatureY = y + cardHeight - 2; // Bottom right corner
     doc.text('..........................................', signatureX - 2, signatureY - 6, null, null, 'right');
-    doc.text('(Signature & seal)', signatureX - 2 , signatureY - 2, null, null, 'right');
+    doc.text('(Signature & seal)', signatureX - 6 , signatureY - 2, null, null, 'right');
 
     // Increment cardsAdded counter
     cardsAdded++;
