@@ -4,6 +4,7 @@ import { jsPDF } from 'jspdf';
 // Import the watermark image
 import watermarkImage from '../assets/EC.png';
 import watermarkEC from "../assets/WatermarkElection.png";
+import {capitalizeFirstLetter} from '../utitlities/utility';
 
 const generatePDF = (userList) => {
 
@@ -65,9 +66,12 @@ const generatePDF = (userList) => {
     doc.setFontSize(9);
     doc.setFont(undefined, "bold");
     doc.setTextColor(255); // White font color
+    if(user.district !== 'KN'){
+      doc.addImage(watermarkEC, 'PNG', x + 20, y + 15, 40, 40, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+    }
     doc.text('Identity Card', rectangleX + identityCardWidth / 2, rectangleY + 6, null, null, 'center');
     doc.addImage(watermarkImage, 'PNG', x, y + 2, 10, 10, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
-    doc.addImage(watermarkEC, 'PNG', x + 20, y + 15, 40, 40, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+    
     doc.setFontSize(9);
     doc.setFont(undefined, "bold");
     doc.setTextColor(255);
@@ -76,21 +80,35 @@ const generatePDF = (userList) => {
     
     doc.setTextColor(0, 0, 128);
     doc.setFontSize(10);
-    doc.text(`${(user.name).toUpperCase()}`, x + cardWidth / 2, y + 19, null, null, 'center');
-    doc.setFontSize(7);
-    doc.setTextColor(0, 0, 0);
-    doc.setFont(undefined, "bold");
-    doc.text(`Deployed for election duty: ${user.kusang}`, x + 2, y + 24);
-    doc.text(`Name of AC/PC: ${allDistrict[user.district]}`, x + 2, y + 29);
-    doc.text(`Age: ${user.age}`, x + 2, y + 34);
-    doc.text(`Name of Sponsoring Deptt: District Election Office`, x + 2, y + 39);
-    doc.text(`Designation of Sponsoring Authority: DEO`, x + 2, y + 44);
-    doc.text(`Designation: ${user.designation}`, x + 2, y + 49);
-    doc.text(`Mobile Number: ${user.phone}`, x + 2, y + 54);
-    doc.text(`Blood Group: ${user.bloodGroup}`, x + 2, y + 59);
+    if(user.district ==='KN'){
+      doc.setTextColor(255, 0, 0);
+      doc.text(`ID No.: ${(user.uniqueID).toUpperCase()}`, x + cardWidth / 2, y + 19, null, null, 'center');
+      doc.setFontSize(7);
+      doc.setTextColor(0, 0, 0);
+      doc.setFont(undefined, "bold");
+      doc.text(`Name: ${(user.name).toUpperCase()}`, x + 2, y + 24);
+      doc.text(`Designation: ${capitalizeFirstLetter(user.designation)}`, x + 2, y + 29);
+      doc.text(`Deployed for election duty: ${capitalizeFirstLetter(user.kusang)}`, x + 2, y + 34);
+      doc.text(`Mobile Number: ${user.phone}`, x + 2, y + 44);
+      doc.text(`Blood Group: ${user.bloodGroup}`, x + 2, y + 39);
+      doc.text(`Valid Up to: 26.04.2024`, x + 2, y + 49);
+    }else{
+      doc.text(`${(user.name).toUpperCase()}`, x + cardWidth / 2, y + 19, null, null, 'center');
+      doc.setFontSize(7);
+      doc.setTextColor(0, 0, 0);
+      doc.setFont(undefined, "bold");
+      doc.text(`Deployed for election duty: ${user.kusang}`, x + 2, y + 24);
+      doc.text(`Name of AC/PC: ${allDistrict[user.district]}`, x + 2, y + 29);
+      doc.text(`Age: ${user.age}`, x + 2, y + 34);
+      doc.text(`Name of Sponsoring Deptt: District Election Office`, x + 2, y + 39);
+      doc.text(`Designation of Sponsoring Authority: DEO`, x + 2, y + 44);
+      doc.text(`Designation: ${user.designation}`, x + 2, y + 49);
+      doc.text(`Mobile Number: ${user.phone}`, x + 2, y + 54);
+      doc.text(`Blood Group: ${user.bloodGroup}`, x + 2, y + 59);
+    }
 
     // Right column
-    const imageX = x + cardWidth - 22; // Adjusted X coordinate for image
+    const imageX = x + cardWidth - 20; // Adjusted X coordinate for image
     const imageY = y + 22; // Adjusted Y coordinate for image
     const imageWidth = 18; // Adjusted width of image
     const imageHeight = 18; // Adjusted height of image
@@ -104,8 +122,17 @@ const generatePDF = (userList) => {
     doc.setFontSize(6);
     const signatureX = x + cardWidth - 2;
     const signatureY = y + cardHeight - 2; // Bottom right corner
-    doc.text('..........................................', signatureX - 2, signatureY - 6, null, null, 'right');
-    doc.text('(Signature & seal)', signatureX - 6 , signatureY - 2, null, null, 'right');
+    if(user.district ==='KN'){
+      doc.text('..........................................', signatureX - 2, signatureY - 2, null, null, 'right');
+      doc.text('(Auth. Signature & seal)', signatureX - 2 , signatureY, null, null, 'right');
+      const signatureXLeft = x + 2; // Adjusted X coordinate for left signature
+      doc.text('..........................................', signatureXLeft, signatureY - 2, null, null, 'left');
+      doc.text('(Card Holder Signature)', signatureXLeft , signatureY, null, null, 'left');
+    }else{
+      doc.text('..........................................', signatureX - 2, signatureY - 2, null, null, 'right');
+      doc.text('(Signature & seal)', signatureX - 6 , signatureY, null, null, 'right');
+    }
+    
 
     // Increment cardsAdded counter
     cardsAdded++;

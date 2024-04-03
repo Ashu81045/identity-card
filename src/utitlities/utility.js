@@ -95,6 +95,22 @@ export function convertWithDelimiter(inputString, delimiter) {
 
   return outputString;
 }
+export const capitalizeFirstLetter = (sentence) => {
+ 
+  // Split the sentence into words
+  let words = sentence.toLowerCase().split(" ");
+  
+  // Capitalize the first letter of each word
+  for (let i = 0; i < words.length; i++) {
+      words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1);
+  }
+  
+  // Join the words back into a sentence
+  let capitalizedSentence = words.join(" ");
+  
+  return capitalizedSentence;
+}
+
 
 
 
