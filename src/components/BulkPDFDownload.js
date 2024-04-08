@@ -69,13 +69,19 @@ const generatePDF = (userList) => {
     if(user.district !== 'KN'){
       doc.addImage(watermarkEC, 'PNG', x + 20, y + 15, 40, 40, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
     }
-    doc.text('Identity Card', rectangleX + identityCardWidth / 2, rectangleY + 6, null, null, 'center');
+    if(user.district !=='KN'){
+      doc.setFontSize(9);
+      doc.setTextColor(255);
+      doc.text(`IDENTITY CARD - ${(user.uniqueID).toUpperCase()}`, rectangleX + identityCardWidth / 2, rectangleY + 6, null, null, 'center');
+    } else{
+      doc.text('Identity Card', rectangleX + identityCardWidth / 2, rectangleY + 6, null, null, 'center');
+    }
     doc.addImage(watermarkImage, 'PNG', x, y + 2, 10, 10, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
     
     doc.setFontSize(9);
     doc.setFont(undefined, "bold");
     doc.setTextColor(255);
-    doc.textWithLink(`LOK SABHA GENERAL ELECTION- 2024`, x + 13, y + 11, { url: '' });
+    doc.textWithLink(`LOK SABHA GENERAL ELECTION - 2024`, x + 13, y + 11, { url: '' });
     // Left column
     
     doc.setTextColor(0, 0, 128);
@@ -100,8 +106,8 @@ const generatePDF = (userList) => {
       doc.text(`Deployed for election duty: ${user.kusang}`, x + 2, y + 24);
       doc.text(`Name of AC/PC: ${allDistrict[user.district]}`, x + 2, y + 29);
       doc.text(`Age: ${user.age}`, x + 2, y + 34);
-      doc.text(`Name of Sponsoring Deptt: District Election Office`, x + 2, y + 39);
-      doc.text(`Designation of Sponsoring Authority: DEO`, x + 2, y + 44);
+      doc.text(`Name of Sponsoring Deptt: ECI`, x + 2, y + 39);
+      doc.text(`Designation of Sponsoring Authority: District Election Officer, Araria`, x + 2, y + 44);
       doc.text(`Designation: ${user.designation}`, x + 2, y + 49);
       doc.text(`Mobile Number: ${user.phone}`, x + 2, y + 54);
       doc.text(`Blood Group: ${user.bloodGroup}`, x + 2, y + 59);
@@ -130,7 +136,7 @@ const generatePDF = (userList) => {
       doc.text('(Card Holder Signature)', signatureXLeft , signatureY, null, null, 'left');
     }else{
       doc.text('..........................................', signatureX - 2, signatureY - 2, null, null, 'right');
-      doc.text('(Signature & seal)', signatureX - 6 , signatureY, null, null, 'right');
+      doc.text('Authorised to issue', signatureX - 6 , signatureY, null, null, 'right');
     }
     
 
