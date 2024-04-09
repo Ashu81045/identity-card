@@ -175,7 +175,11 @@ const generatePDF = (userList) => {
       doc.text(allDistrict[user.district], x + 35, y + 28);
       doc.text(user.age, x + 35, y + 32);
       doc.text("ECI", x + 35, y + 36);
+      if (user.district === "PR") {
+      doc.text("DEO-CUM-DM, Purnia", x + 35, y + 40);
+    }else{
       doc.text("DEO-CUM-DM, Araria", x + 35, y + 40);
+    }
       doc.text(user.designation, x + 35, y + 44);
       doc.text(user.phone, x + 35, y + 48);
       doc.text(user.bloodGroup, x + 35, y + 52);
