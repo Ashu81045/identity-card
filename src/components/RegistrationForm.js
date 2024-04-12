@@ -26,6 +26,8 @@ const KusangOptions = [
     { label: 'KARMIK KALYAN', value: 'KARMIK KALYAN' },
     { label: 'LAW AND ORDER', value: 'LAW AND ORDER' },
     { label: 'MEDIA /MCMC', value: 'MEDIA /MCMC' },
+    { label: 'MAHILA COLLEGE, ARARIA', value: 'MAHILA COLLEGE, ARARIA' },
+    { label: 'MAHILA COLLEGE, PURNIA', value: 'MAHILA COLLEGE, PURNIA' },
     { label: 'MATERIAL CELL', value: 'MATERIAL CELL' },
     { label: 'NOMINATION CELL', value: 'NOMINATION CELL' },
     { label: 'Postal Ballot', value: 'Postal Ballot' },
