@@ -11,6 +11,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { extractDate } from "../utitlities/utility";
 import CustomDropdown from "../components/CustomDropDown";
 import UpdateSignature from "../components/UpdateSignature";
+import { KusangOptions } from "../utitlities/const";
 //import { addInitialDistrictOptions, addInitialKushangOptions } from "../utitlities/services";
 
 const AdminPage = () => {
@@ -31,37 +32,6 @@ const AdminPage = () => {
     { label: "Purnia", value: "PR" },
     { label: "Kishanganj", value: "KN" },
   ];
-
-  const KusangOptions = [
-    { label: 'ACTIVE MEDIA GROUP', value: 'ACTIVE MEDIA GROUP' },
-    { label: 'ADARSH ACHAR SANHITA', value: 'ADARSH ACHAR SANHITA' },
-    { label: 'CONTROL ROOM', value: 'CONTROL ROOM' },
-    { label: 'CPMF', value: 'CPMF' },
-    { label: 'Computerization Cell', value: 'Computerization Cell' },
-    { label: 'DEMP CELL', value: 'DEMP CELL' },
-    { label: 'DISTRICT COMMUNICATION', value: 'DISTRICT COMMUNICATION' },
-    { label: 'DISTRICT CONTROL', value: 'DISTRICT CONTROL' },
-    { label: 'EVM/VVPAT', value: 'EVM/VVPAT' },
-    { label: 'Expenditure Monitoring', value: 'Expenditure Monitoring' },
-    { label: 'IT CELL', value: 'IT CELL' },
-    { label: 'KARMIK CELL', value: 'KARMIK CELL' },
-    { label: 'KARMIK KALYAN', value: 'KARMIK KALYAN' },
-    { label: 'LAW AND ORDER', value: 'LAW AND ORDER' },
-    { label: 'MEDIA /MCMC', value: 'MEDIA /MCMC' },
-    { label: 'MAHILA COLLEGE, ARARIA', value: 'MAHILA COLLEGE, ARARIA' },
-    { label: 'MAHILA COLLEGE, PURNIA', value: 'MAHILA COLLEGE, PURNIA' },
-    { label: 'MATERIAL CELL', value: 'MATERIAL CELL' },
-    { label: 'NOMINATION CELL', value: 'NOMINATION CELL' },
-    { label: 'Postal Ballot', value: 'Postal Ballot' },
-    { label: 'PWDs CELL', value: 'PWDs CELL' },
-    { label: 'SECTOR MAGISTRATE', value: 'SECTOR MAGISTRATE' },
-    { label: 'SINGLE WINDOW', value: 'SINGLE WINDOW' },
-    { label: 'STRONG ROOM', value: 'STRONG ROOM' },
-    { label: 'SWEEP', value: 'SWEEP' },
-    { label: 'TRANING CELL', value: 'TRANING CELL' },
-    { label: 'OTHER', value: 'OTHER' }
-];
-
 useEffect(() => {
   if (startDate && endDate) {
       // Filter data based on date range, district, and Kushang value
