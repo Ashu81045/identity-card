@@ -1,4 +1,10 @@
 export const KusangOptions = [
+    { label: '46-Narpatganj EVM Commissioning', value: '46-Narpatganj EVM Commissioning' },
+    { label: '47-Raniganj EVM Commissioning', value: '47-Raniganj EVM Commissioning' },
+    { label: '48-Forbesganj EVM Commissioning', value: '48-Forbesganj EVM Commissioning' },
+    { label: '49-Araria EVM Commissioning', value: '49-Araria EVM Commissioning' },
+    { label: '50-Jokihat EVM Commissioning', value: '50-Jokihat EVM Commissioning' },
+    { label: '51-Sikti EVM Commissioning', value: '51-Sikti EVM Commissioning' },
     { label: 'ACTIVE MEDIA GROUP', value: 'ACTIVE MEDIA GROUP' },
     { label: 'ADARSH ACHAR SANHITA', value: 'ADARSH ACHAR SANHITA' },
     { label: 'CONTROL ROOM', value: 'CONTROL ROOM' },
