@@ -66,19 +66,21 @@ useEffect(() => {
 
   useEffect(() => {
     setIsLoading(true);
-    retrieveAllData()
-    .then(data => {
-      setIsLoading(false);
-      setDataList(data);
-    }).catch( e => {
-      setIsLoading(false);
-      console.log(e)
-    });
+    if(isLoggedIn){
+      retrieveAllData()
+      .then(data => {
+        setIsLoading(false);
+        setDataList(data);
+      }).catch( e => {
+        setIsLoading(false);
+        console.log(e)
+      });
+    }
   }, [isLoggedIn]);
 
   // Handle login logic
   const handleLogin = (mobileNumber, password) => {
-    if ((mobileNumber === "9667833075" || "9470062768") && password === "Admin@123") {
+    if ((mobileNumber === "9667833075" || "9470062768") && password === "Admin@12345!") {
       setIsLoggedIn(true);
     } else {
       alert("You don't have access to this page");

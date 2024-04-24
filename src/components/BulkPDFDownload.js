@@ -189,10 +189,10 @@ const generatePDF = (userList) => {
     }
 
     // Right column
-    const imageX = x + cardWidth - 20; // Adjusted X coordinate for image
-    const imageY = y + 22; // Adjusted Y coordinate for image
-    const imageWidth = 18; // Adjusted width of image
-    const imageHeight = 18; // Adjusted height of image
+    const imageX = x + cardWidth - 18; // Adjusted X coordinate for image
+    const imageY = y + 26; // Adjusted Y coordinate for image
+    const imageWidth = 16; // Adjusted width of image
+    const imageHeight = 16; // Adjusted height of image
 
     doc.setDrawColor(0); // black
     doc.setLineWidth(1);
