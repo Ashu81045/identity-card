@@ -146,7 +146,7 @@ const generatePDF = (userList) => {
       );
       doc.text(`Mobile Number: ${user.phone}`, x + 2, y + 44);
       doc.text(`Blood Group: ${user.bloodGroup}`, x + 2, y + 39);
-      doc.text(`Valid Up to: 26.04.2024`, x + 2, y + 49);
+      doc.text(`Valid Up to: 04.06.2024`, x + 2, y + 49);
     } else {
       doc.text(
         `${user.name.toUpperCase()}`,
@@ -177,10 +177,10 @@ const generatePDF = (userList) => {
       doc.text("ECI", x + 35, y + 36);
       if (user.district === "PR") {
         doc.text("DEO-CUM-DM, Purnia", x + 35, y + 40);
-        doc.text("26.04.2024", x + 35, y + 56);
+        doc.text("04.06.2024", x + 35, y + 56);
       }else {
         doc.text("DEO-CUM-DM, Araria", x + 35, y + 40);
-        doc.text("06.06.2024", x + 35, y + 56);
+        doc.text("04.06.2024", x + 35, y + 56);
       }
       doc.text(user.designation, x + 35, y + 44);
       doc.text(user.phone, x + 35, y + 48);
