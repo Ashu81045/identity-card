@@ -12,7 +12,7 @@ const NoService = () => {
       <Header />
       <div style={{ margin: "1rem" }}>
         <div className="tracking-container">
-          <h2 className="tracking-heading">Free servicesd have been terminated, please contact admin for help.</h2>
+          <h2 className="tracking-heading">Free services have been terminated, please contact admin for help.</h2>
           <p>Thank you, have a good day!!</p>
           </div>
           </div>
