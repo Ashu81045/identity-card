@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import CustomDropdown from "./CustomDropDown";
 import "./RegistrationForm.css";
-import SignatureImg from "../assets/signature.png";
+import signatureImage from "../assets/signature.png";
 import { generateRandomID } from "../utitlities/utility";
 import { saveFormDataBS } from "../utitlities/services";
 import Modal from "./Modal";
+import { compressImage,readFileAsDataURL } from '../utitlities/utility';
 
 const BidhanSabhaRegistration = () => {
   const [name, setName] = useState("");
@@ -17,7 +18,7 @@ const BidhanSabhaRegistration = () => {
   const [mobileError, setMobileError] = useState("");
   const [profilePhoto, setProfilePhoto] = useState(null);
   const [profilePhotoError, setProfilePhotoError] = useState("");
-  const [signatureImage, setSignatureImage] = useState(SignatureImg);
+//   const [signatureImage, setSignatureImage] = useState(SignatureImg);
   //   const [signatureError, setSignatureError] = useState('');
   const [district, setSetDistrict] = useState("");
   const [districtError, setDistrictError] = useState("");
@@ -63,16 +64,23 @@ const BidhanSabhaRegistration = () => {
     }
   };
 
-  const handleProfilePhotoUpload = (event) => {
+  const handleProfilePhotoUpload = async(event) => {
     const file = event.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfilePhoto(reader.result);
-        setProfilePhotoError("");
-      };
-      reader.readAsDataURL(file);
-    }
+                try {
+                    // Load the image as a data URL
+                    const imageDataUrl = await readFileAsDataURL(file);
+                    // Compress the image
+                    const compressedImageDataUrl = await compressImage(imageDataUrl);
+        
+                    // Set the compressed image as the profile photo
+                    setProfilePhoto(compressedImageDataUrl);
+                    setProfilePhotoError(''); // Clear error message when profile photo is uploaded
+                } catch (error) {
+                    console.error('Error compressing image:', error);
+                    // Handle error
+                }
+            }
   };
   const closeModal = () => {
     setIsModalOpen(false);

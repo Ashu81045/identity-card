@@ -189,7 +189,7 @@ const IDCard = ({ user, cityOptions }) => {
       <div className="flex justify-center mb-1.5">
         <div className="w-16 h-16 border border-gray-800 bg-gray-50 flex items-center justify-center overflow-hidden">
           {user.profilePhoto ? (
-            <img src={user.profilePhoto} alt="ID Photo" className="w-full h-full object-cover" />
+            <img src={user.profilePhoto} alt="IDPhoto" className="w-full h-full object-cover" />
           ) : (
             <span className="text-gray-400 text-[7px]">Photo</span>
           )}
