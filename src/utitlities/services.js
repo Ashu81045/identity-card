@@ -32,6 +32,17 @@ export async function saveFormData(formData) {
     throw error;
   }
 }
+export async function saveFormDataBS(formData) {
+  const firestore = initializeFirestore();
+  try {
+    const docRef = await addDoc(collection(firestore, "identity-bs"), formData);
+    console.log("Document written with ID: ", docRef);
+    return formData.uniqueID;
+  } catch (error) {
+    console.error("Error adding document: ", error);
+    throw error;
+  }
+}
 
 export async function addUpdateDistrict(district) {
   const firestore = initializeFirestore();
@@ -104,11 +115,26 @@ export async function retrieveAllData() {
   });
   return dataArray;
 }
+export async function retrieveAllDataBs() {
+  const firestore = initializeFirestore();
+  const querySnapshot = await getDocs(collection(firestore, "identity-bs"));
+  const dataArray = [];
+  querySnapshot.forEach((doc) => {
+    dataArray.push({ id: doc.id, ...doc.data() });
+  });
+  return dataArray;
+}
 
 // Function to update specific document in Firestore
-export async function updateDocument(docId, newData) {
+export async function updateDocument(docId, newData, type) {
   const firestore = initializeFirestore();
-  const docRef = doc(firestore, "identity", docId);
+  let docRef;
+  if(type==='bs'){
+     docRef = doc(firestore, "identity-bs", docId);
+  }else{
+    docRef = doc(firestore, "identity", docId);
+  }
+   
   try {
     const dataToUpdate = { approved: newData };
     await updateDoc(docRef, dataToUpdate);

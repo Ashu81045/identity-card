@@ -25,14 +25,9 @@ const Header = () => {
       <nav className={`menu ${isMenuOpen ? 'open' : 'close'}`}>
         {/* Use Link component for navigation */}
         <Link to="/" className="menu-item">Home</Link>
-        {/* <Link to="/admin" className="menu-item">Admin</Link>
+        <Link to="/admin" className="menu-item">Admin</Link>
         <Link to="/track" className="menu-item">Track</Link>
-        <Link to="/contact" className="menu-item">Contact Us</Link> */}
-        
-        {/* Add more menu items as needed */}
-        <Link to="/" className="menu-item">Admin</Link>
-        <Link to="/" className="menu-item">Track</Link>
-        <Link to="/" className="menu-item">Contact Us</Link>
+        <Link to="/contact" className="menu-item">Contact Us</Link>
       </nav>
     </header>
   );

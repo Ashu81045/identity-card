@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Header from "../Layout/Header";
 import "./AdminPage.css";
-import { retrieveAllData, updateDocument } from "../utitlities/services";
+import { retrieveAllData, updateDocument, retrieveAllDataBs } from "../utitlities/services";
 import LoginForm from "../components/LoginForm";
 import PreviewModal from "../components/PreviewModal";
 import IDCardTemplate from "../components/IDTemplate";
@@ -12,6 +12,7 @@ import { extractDate } from "../utitlities/utility";
 import CustomDropdown from "../components/CustomDropDown";
 import UpdateSignature from "../components/UpdateSignature";
 import { KusangOptions } from "../utitlities/const";
+import BulkIdPreviewBs from "../components/BulkIdPreviewBs";
 //import { addInitialDistrictOptions, addInitialKushangOptions } from "../utitlities/services";
 
 const AdminPage = () => {
@@ -26,6 +27,7 @@ const AdminPage = () => {
   const [filteredData, setFilteredData] = useState(dataList); // Initialize filteredData with all data
   const [kushang, setKushang] = useState('');
   const [district, setDistrict] = useState('');
+  const [type, setType] = useState('');
 
   const cityOptions = [
     { label: "Araria", value: "AR" },
@@ -66,7 +68,7 @@ useEffect(() => {
 
   useEffect(() => {
     setIsLoading(true);
-    if(isLoggedIn){
+    if(isLoggedIn && type==='ls'){
       retrieveAllData()
       .then(data => {
         setIsLoading(false);
@@ -76,7 +78,17 @@ useEffect(() => {
         console.log(e)
       });
     }
-  }, [isLoggedIn]);
+    if(isLoggedIn && type==='bs'){
+      retrieveAllDataBs()
+      .then(data => {
+        setIsLoading(false);
+        setDataList(data);
+      }).catch( e => {
+        setIsLoading(false);
+        console.log(e)
+      });
+    }
+  }, [isLoggedIn,type]);
 
   // Handle login logic
   const handleLogin = (mobileNumber, password) => {
@@ -90,7 +102,7 @@ useEffect(() => {
   // Handle approve button click
   const handleApprove = (id) => {
     setIsLoading(true);
-    updateDocument(id, true)
+    updateDocument(id, true,type)
     .then(() => { 
       setIsLoading(false);
       alert("You have successfully approved!");
@@ -101,7 +113,7 @@ useEffect(() => {
   // Handle decline button click
   const handleDecline = (id) => {
     setIsLoading(true);
-    updateDocument(id, false)
+    updateDocument(id, false,type)
     .then(() => setIsLoading(false))
     .catch(() => setIsLoading(false));
   };
@@ -137,7 +149,13 @@ useEffect(() => {
       <Header />
       <div style={{ margin: "1rem" }}>
         {!isLoggedIn && <LoginForm onLogin={handleLogin} />}
-        {isLoggedIn && (
+        {isLoggedIn && type==='' && (
+          <>
+          <button onClick={()=>{setType('bs')}}>Vidhan Sabha</button>
+          <button onClick={()=>{setType('ls')}}>Lok Sabha</button>
+          </>
+        )}
+        {isLoggedIn && type ==='ls' && (
           <React.Fragment>
             <div className="filter-card">
               <div className="filter-class">
@@ -200,8 +218,76 @@ useEffect(() => {
                 </div>
               </div>
             ))}
+            
           </React.Fragment>
         )}
+        {isLoggedIn && type ==='bs' && (
+          <React.Fragment>
+            <div className="filter-card">
+              <div className="filter-class">
+              <p className="para-text">Please select date range</p>
+              <div className="para-text">
+                <DatePicker
+                  selected={startDate}
+                  onChange={(date) => setStartDate(date)}
+                  selectsStart
+                  startDate={startDate}
+                  endDate={endDate}
+                  placeholderText="From"
+                />
+                <DatePicker
+                  selected={endDate}
+                  onChange={(date) => setEndDate(date)}
+                  selectsEnd
+                  startDate={startDate}
+                  endDate={endDate}
+                  placeholderText="To"
+                  minDate={startDate}
+                />
+              </div>
+              <div className="kusang-cont">
+                <label>Select District</label>
+                <CustomDropdown options={cityOptions} onSelect={handleDistrictSelect} />
+              </div>
+              {/* <div className="kusang-cont">
+                <label>Select Kusang</label>
+                <CustomDropdown options={KusangOptions} onSelect={handleKushangSelect} />
+              </div> */}
+              <p className="para-text">Number of ID: {filteredData.length}</p>
+              <button className="reset-button" onClick={handleReset}>Reset All filters</button>
+              {type==='ls'?(<BulkPDFDownloadButton userList={filteredData} />):(<BulkIdPreviewBs userList={filteredData}/>)}
+              </div>
+              <div className="seperator"/>
+              <div className="signature-class">
+                <UpdateSignature/>
+              </div>
+             
+            </div>
+            {isLoading && <Spinner />}
+            {filteredData.map((item) => (
+              <div className="card" key={item.id}>
+                <div className="image-container">
+                  <img
+                    src={item.profilePhoto}
+                    alt={item.name}
+                    className="profile-photo-1"
+                  />
+                </div>
+                <div className="details">
+                  <h2>{item.name}</h2>
+                  <p>ID: {item.uniqueID}</p>
+                  <p>Status: {item.approved ? "Approved" : "In Progress"}</p>
+                  <div className="buttons">
+                    <button onClick={() => handleDecline(item.id)}>Decline</button>
+                    <button onClick={() => toggleModal(item)}>Approve</button>
+                  </div>
+                </div>
+              </div>
+            ))
+          })
+          </React.Fragment>
+          )}
+            
       </div>
       {showModal && (
         <PreviewModal onClose={() => setShowModal(false)}>
