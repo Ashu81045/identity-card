@@ -259,7 +259,7 @@ const RegistrationForm = () => {
                     ) : (
                         <div className="default-profile-photo"></div>
                     )}
-                    <input type="file" accept="image/*" onChange={handleProfilePhotoUpload} />
+                    <input type="file" accept="image/*" capture="environment" onChange={handleProfilePhotoUpload} />
                     {profilePhotoError && <span className="error">{profilePhotoError}</span>}
                 </div>
                 <div style={{ marginTop: "4rem" }}>
