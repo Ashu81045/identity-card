@@ -7,6 +7,7 @@ import { saveFormDataBS } from "../utitlities/services";
 import Modal from "./Modal";
 import { compressImage, readFileAsDataURL } from "../utitlities/utility";
 import { KusangOptions } from "../utitlities/const";
+import logo from '../assets/EC.png'
 
 const BidhanSabhaRegistration = () => {
   const [name, setName] = useState("");
@@ -37,9 +38,10 @@ const BidhanSabhaRegistration = () => {
   const finalKusang = kusang === "OTHER" ? `OTHER:${otherKusang}` : kusang;
 
   const cityOptions = [
-    { label: "09-Araria", value: "AR" },
-    { label: "12-Purnia", value: "PR" },
-    { label: "10-Kishanganj", value: "KN" },
+    { label: "Araria", value: "AR" },
+    { label: "Purnia", value: "PR" },
+    { label: "Kishanganj", value: "KN" },
+    { label: "Madhepura", value: "MP" },
   ];
 
   const handleNameChange = (event) => {
@@ -344,11 +346,12 @@ const BidhanSabhaRegistration = () => {
           {/* District */}
           <div className="flex items-center justify-between mb-5">
             {/* ECI Logos */}
-            <div className="w-16 h-16 border-2 border-gray-300 rounded-full flex items-center justify-center bg-white flex-shrink-0">
-              <div className="text-center">
-                <div className="w-12 h-8 bg-gradient-to-b from-orange-500 via-white to-green-600 rounded"></div>
-                <div className="text-xs mt-1 font-bold">ECI</div>
-              </div>
+            <div className="w-12 h-12 border border-gray-300 rounded-full flex items-center justify-center bg-white flex-shrink-0 overflow-hidden">
+                <img
+                    src={logo}   // 👈 replace with your actual logo path or import
+                    alt="ECI Logo"
+                    className="w-full h-full object-cover"
+                />
             </div>
 
             <div className="flex-1 text-center px-3">
@@ -364,11 +367,12 @@ const BidhanSabhaRegistration = () => {
               </div>
             </div>
 
-            <div className="w-16 h-16 border-2 border-gray-300 rounded-full flex items-center justify-center bg-white flex-shrink-0">
-              <div className="text-center">
-                <div className="w-12 h-8 bg-gradient-to-b from-orange-500 via-white to-green-600 rounded"></div>
-                <div className="text-xs mt-1 font-bold">ECI</div>
-              </div>
+            <div className="w-12 h-12 border border-gray-300 rounded-full flex items-center justify-center bg-white flex-shrink-0">
+                <img
+                    src={logo} // Replace this with your actual image path
+                    alt="ECI Logo"
+                    className="w-full h-full object-contain rounded-full"
+                />
             </div>
           </div>
 

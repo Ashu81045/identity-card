@@ -2,13 +2,15 @@ import signatureImage from '../assets/signature.png'
 import React, { useRef } from 'react';
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
+import logo from '../assets/EC.png'
 //import signatureImage from '../assets/signature.png'
 
 const BulkIDCardPreview = ({ userList }) => {
   const cityOptions = {
-    AR: '09-Araria',
-    PR: '12-Purnia',
-    KN: '10-Kishanganj',
+    AR: 'Araria',
+    PR: 'Purnia',
+    KN: 'Kishanganj',
+    MP: 'Madhepura'
   };
 
   const cardsContainerRef = useRef(null);
@@ -159,12 +161,14 @@ const IDCard = ({ user, cityOptions }) => {
       {/* District and Identity Card Header */}
       <div className="flex items-center justify-between mb-1.5">
         {/* Left ECI Logo */}
-        <div className="w-7 h-7 border border-gray-300 rounded-full flex items-center justify-center bg-white flex-shrink-0">
-          <div className="text-center">
-            <div className="w-5 h-3 bg-gradient-to-b from-orange-500 via-white to-green-600 rounded"></div>
-            <div className="text-[5px] font-bold mt-0.5">ECI</div>
-          </div>
+        <div className="w-7 h-7 border border-gray-300 rounded-full flex items-center justify-center bg-white flex-shrink-0 overflow-hidden">
+          <img
+            src={logo}   // 👈 replace with your actual logo path or import
+            alt="ECI Logo"
+            className="w-full h-full object-cover"
+          />
         </div>
+
 
         {/* Center Content */}
         <div className="flex-1 text-center px-1">
@@ -178,12 +182,14 @@ const IDCard = ({ user, cityOptions }) => {
 
         {/* Right ECI Logo */}
         <div className="w-7 h-7 border border-gray-300 rounded-full flex items-center justify-center bg-white flex-shrink-0">
-          <div className="text-center">
-            <div className="w-5 h-3 bg-gradient-to-b from-orange-500 via-white to-green-600 rounded"></div>
-            <div className="text-[5px] font-bold mt-0.5">ECI</div>
-          </div>
+          <img
+            src={logo} // Replace this with your actual image path
+            alt="ECI Logo"
+            className="w-6 h-6 object-contain rounded-full"
+          />
         </div>
       </div>
+
 
       {/* Photo Box */}
       <div className="flex justify-center mb-1.5">
