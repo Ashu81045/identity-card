@@ -65,28 +65,23 @@ const BidhanSabhaRegistration = () => {
   };
 
   const handleProfilePhotoUpload = async (event) => {
-  const file = event.target.files[0];
-  if (!file) return;
-
-  try {
-    // Read file as Data URL
-    const imageDataUrl = await readFileAsDataURL(file);
-
-    // Compress image
-    const compressedImageDataUrl = await compressImage(imageDataUrl);
-
-    // Convert compressed Base64 -> Blob
-    const blob = await fetch(compressedImageDataUrl).then(res => res.blob());
-
-    // Store Blob in state (for Firebase Storage upload)
-    setProfilePhoto(blob);
-    setProfilePhotoError('');
-
-  } catch (error) {
-    console.error('Error compressing image:', error);
-    setProfilePhotoError('Error compressing image');
-  }
-};
+          const file = event.target.files[0];
+          if (file) {
+              try {
+                  // Load the image as a data URL
+                  const imageDataUrl = await readFileAsDataURL(file);
+                  // Compress the image
+                  const compressedImageDataUrl = await compressImage(imageDataUrl);
+      
+                  // Set the compressed image as the profile photo
+                  setProfilePhoto(compressedImageDataUrl);
+                  setProfilePhotoError(''); // Clear error message when profile photo is uploaded
+              } catch (error) {
+                  console.error('Error compressing image:', error);
+                  // Handle error
+              }
+          }
+      };
 
   const closeModal = () => {
     setIsModalOpen(false);
