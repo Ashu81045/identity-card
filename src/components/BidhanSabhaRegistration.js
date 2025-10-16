@@ -5,26 +5,36 @@ import signatureImage from "../assets/signature.png";
 import { generateRandomID } from "../utitlities/utility";
 import { saveFormDataBS } from "../utitlities/services";
 import Modal from "./Modal";
-import { compressImage,readFileAsDataURL } from '../utitlities/utility';
+import { compressImage, readFileAsDataURL } from "../utitlities/utility";
+import { KusangOptions } from "../utitlities/const";
 
 const BidhanSabhaRegistration = () => {
   const [name, setName] = useState("");
   const [nameError, setNameError] = useState("");
   const [designation, setDesignation] = useState("");
   const [designationError, setDesignationError] = useState("");
-  const [department, setDepartment] = useState("");
-  const [departmentError, setDepartmentError] = useState("");
+
+  // 🔸 Department state replaced with Kusang
+  // const [department, setDepartment] = useState("");
+  // const [departmentError, setDepartmentError] = useState("");
+
   const [mobile, setMobile] = useState("");
   const [mobileError, setMobileError] = useState("");
   const [profilePhoto, setProfilePhoto] = useState(null);
   const [profilePhotoError, setProfilePhotoError] = useState("");
-//   const [signatureImage, setSignatureImage] = useState(SignatureImg);
-  //   const [signatureError, setSignatureError] = useState('');
   const [district, setSetDistrict] = useState("");
   const [districtError, setDistrictError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [uniqueID, setUniqueID] = useState("");
+
+  // 🔹 Kusang States
+  const [kusangError, setKusangError] = useState("");
+  const [kusang, setKushang] = useState("");
+  const [otherKusangError, setOtherKusangError] = useState("");
+  const [otherKusang, setOtherKusang] = useState("");
+
+  const finalKusang = kusang === "OTHER" ? `OTHER:${otherKusang}` : kusang;
 
   const cityOptions = [
     { label: "09-Araria", value: "AR" },
@@ -35,69 +45,43 @@ const BidhanSabhaRegistration = () => {
   const handleNameChange = (event) => {
     const value = event.target.value;
     setName(value);
-    if (value.length >= 2) {
-      setNameError("");
-    }
+    if (value.length >= 2) setNameError("");
   };
 
   const handleDesignationChange = (event) => {
     const value = event.target.value;
     setDesignation(value);
-    if (value) {
-      setDesignationError("");
-    }
+    if (value) setDesignationError("");
   };
 
-  const handleDepartmentChange = (event) => {
-    const value = event.target.value;
-    setDepartment(value);
-    if (value) {
-      setDepartmentError("");
-    }
-  };
+  // ❌ Removed old department handler
+  // const handleDepartmentChange = (event) => {
+  //   const value = event.target.value;
+  //   setDepartment(value);
+  //   if (value) setDepartmentError("");
+  // };
 
   const handleMobileChange = (event) => {
     const value = event.target.value;
     setMobile(value);
-    if (/^[6-9]\d{9}$/.test(value)) {
-      setMobileError("");
-    }
+    if (/^[6-9]\d{9}$/.test(value)) setMobileError("");
   };
 
   const handleProfilePhotoUpload = async (event) => {
-          const file = event.target.files[0];
-          if (file) {
-              try {
-                  // Load the image as a data URL
-                  const imageDataUrl = await readFileAsDataURL(file);
-                  // Compress the image
-                  const compressedImageDataUrl = await compressImage(imageDataUrl);
-      
-                  // Set the compressed image as the profile photo
-                  setProfilePhoto(compressedImageDataUrl);
-                  setProfilePhotoError(''); // Clear error message when profile photo is uploaded
-              } catch (error) {
-                  console.error('Error compressing image:', error);
-                  // Handle error
-              }
-          }
-      };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
+    const file = event.target.files[0];
+    if (file) {
+      try {
+        const imageDataUrl = await readFileAsDataURL(file);
+        const compressedImageDataUrl = await compressImage(imageDataUrl);
+        setProfilePhoto(compressedImageDataUrl);
+        setProfilePhotoError("");
+      } catch (error) {
+        console.error("Error compressing image:", error);
+      }
+    }
   };
 
-  //   const handleSignatureUpload = (event) => {
-  //     const file = event.target.files[0];
-  //     if (file) {
-  //       const reader = new FileReader();
-  //       reader.onloadend = () => {
-  //         setSignatureImage(reader.result);
-  //         setSignatureError('');
-  //       };
-  //       reader.readAsDataURL(file);
-  //     }
-  //   };
+  const closeModal = () => setIsModalOpen(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -106,62 +90,59 @@ const BidhanSabhaRegistration = () => {
     if (!district) {
       setDistrictError("Please select a district.");
       isValid = false;
-    } else {
-      setDistrictError("");
-    }
+    } else setDistrictError("");
 
     if (!name || name.length < 2) {
       setNameError("Name must be at least 2 characters long.");
       isValid = false;
-    } else {
-      setNameError("");
-    }
+    } else setNameError("");
 
     if (!designation) {
       setDesignationError("Please enter your designation.");
       isValid = false;
-    } else {
-      setDesignationError("");
-    }
+    } else setDesignationError("");
 
-    if (!department) {
-      setDepartmentError("Please enter your department.");
+    // ✅ Kusang validation replaces department
+    if (!kusang) {
+      setKusangError("Please select a Kusang option.");
+      isValid = false;
+    } else if (kusang === "OTHER" && !otherKusang) {
+      setOtherKusangError("Please enter other Kusang name.");
       isValid = false;
     } else {
-      setDepartmentError("");
+      setKusangError("");
+      setOtherKusangError("");
     }
 
     if (!mobile || !/^[6-9]\d{9}$/.test(mobile)) {
       setMobileError("Please enter a valid 10-digit phone number.");
       isValid = false;
-    } else {
-      setMobileError("");
-    }
+    } else setMobileError("");
 
     if (!profilePhoto) {
       setProfilePhotoError("Please upload a profile photo.");
       isValid = false;
-    } else {
-      setProfilePhotoError("");
-    }
+    } else setProfilePhotoError("");
 
     if (isValid) {
       setIsLoading(true);
-      let formData = {
-        name: name,
+      const finalKusang = kusang === "OTHER" ? `OTHER:${otherKusang}` : kusang;
+      const formData = {
+        name,
         phone: mobile,
-        designation: designation,
-        profilePhoto: profilePhoto,
-        district: district,
+        designation,
+        profilePhoto,
+        district,
         uniqueID: generateRandomID(district),
         approved: false,
-        department:department
+        // 🔸 Replaced department with finalKusang field
+        department: finalKusang,
       };
+
       saveFormDataBS(formData)
         .then((data) => {
           setIsLoading(false);
           setUniqueID(data);
-          console.log(data);
           setIsModalOpen(true);
           resetForm();
         })
@@ -170,26 +151,34 @@ const BidhanSabhaRegistration = () => {
           setIsLoading(false);
           alert("error ", e);
         });
-
-      //   alert('Form submitted successfully!');
-      //   window.print();
     }
+  };
+
+  const handleOtherKusangChange = (event) => {
+    const value = event.target.value;
+    setOtherKusang(value);
+    if (value.length >= 3) setOtherKusangError("");
+  };
+
+  const handleKushangSelect = (option) => {
+    setKushang(option.value);
+    if (option.value) setKusangError("");
   };
 
   const handleDistrictSelect = (option) => {
     setSetDistrict(option.value);
-    console.log(option, "option");
     setDistrictError("");
   };
 
   const resetForm = () => {
     setName("");
     setDesignation("");
-    setDepartment("");
+    // setDepartment("");
     setMobile("");
     setProfilePhoto(null);
-    // setSignatureImage(null);
     setSetDistrict("");
+    setKushang("");
+    setOtherKusang("");
   };
 
   return (
@@ -198,8 +187,11 @@ const BidhanSabhaRegistration = () => {
         <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">
           Bihar Election Identity Card Form
         </h2>
+
         {isLoading && <Spinner />}
+
         <form onSubmit={handleSubmit}>
+          {/* Profile Photo */}
           <div className="text-center mb-8">
             <div className="w-40 h-48 mx-auto mb-4 border-2 border-gray-300 rounded-lg overflow-hidden bg-gray-50 flex items-center justify-center">
               {profilePhoto ? (
@@ -229,6 +221,7 @@ const BidhanSabhaRegistration = () => {
             )}
           </div>
 
+          {/* District */}
           <div className="drop-down-container mb-5">
             <label>Select District *:</label>
             <CustomDropdown
@@ -238,6 +231,33 @@ const BidhanSabhaRegistration = () => {
             {districtError && <span className="error">{districtError}</span>}
           </div>
 
+          {/* ✅ Kusang Dropdown */}
+          <div className=" drop-down-container mb-5">
+            <label className="block mb-2 font-medium text-gray-700">
+              Dep. for Ele. Duty *:
+            </label>
+            <CustomDropdown
+              options={KusangOptions}
+              onSelect={handleKushangSelect}
+            />
+            {kusangError && <span className="error">{kusangError}</span>}
+          </div>
+
+          {kusang === "OTHER" && (
+            <div className="form-group">
+              <label>Please add Kusang *:</label>
+              <input
+                type="text"
+                value={otherKusang}
+                onChange={handleOtherKusangChange}
+              />
+              {otherKusangError && (
+                <span className="error">{otherKusangError}</span>
+              )}
+            </div>
+          )}
+
+          {/* Name */}
           <div className="mb-5">
             <label className="block mb-2 font-medium text-gray-700">
               Name *:
@@ -255,6 +275,7 @@ const BidhanSabhaRegistration = () => {
             )}
           </div>
 
+          {/* Designation */}
           <div className="mb-5">
             <label className="block mb-2 font-medium text-gray-700">
               Designation *:
@@ -272,23 +293,9 @@ const BidhanSabhaRegistration = () => {
             )}
           </div>
 
-          <div className="mb-5">
-            <label className="block mb-2 font-medium text-gray-700">
-              Dep. for Ele. Duty *:
-            </label>
-            <input
-              type="text"
-              value={department}
-              onChange={handleDepartmentChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded text-base box-border"
-            />
-            {departmentError && (
-              <span className="text-red-600 text-sm block mt-1">
-                {departmentError}
-              </span>
-            )}
-          </div>
+          {/* ❌ Department Input — fully removed */}
 
+          {/* Mobile */}
           <div className="mb-5">
             <label className="block mb-2 font-medium text-gray-700">
               Mobile *:
@@ -306,26 +313,7 @@ const BidhanSabhaRegistration = () => {
             )}
           </div>
 
-          {/* <div className="mb-5 pb-5 border-b-2 border-gray-200">
-            <label className="block mb-2 font-medium text-gray-700">Signature Image *:</label>
-            <div className="w-40 h-20 mx-auto mb-3 border-2 border-gray-300 rounded-lg overflow-hidden bg-gray-50 flex items-center justify-center">
-              {signatureImage ? (
-                <img src={signatureImage} alt="Signature" className="w-full h-full object-contain p-1" />
-              ) : (
-                <span className="text-gray-400 text-sm">No Signature</span>
-              )}
-            </div>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleSignatureUpload}
-              className="block mx-auto text-sm"
-            />
-            {signatureError && (
-              <span className="text-red-600 text-sm block mt-2 text-center">{signatureError}</span>
-            )}
-          </div> */}
-
+          {/* Buttons */}
           <button
             type="submit"
             className="w-full px-4 py-3 bg-blue-600 text-white rounded text-base font-semibold hover:bg-blue-700 mt-3"
@@ -353,9 +341,9 @@ const BidhanSabhaRegistration = () => {
             </h1>
           </div>
 
-          {/* District and Identity Card Header */}
+          {/* District */}
           <div className="flex items-center justify-between mb-5">
-            {/* Left ECI Logo */}
+            {/* ECI Logos */}
             <div className="w-16 h-16 border-2 border-gray-300 rounded-full flex items-center justify-center bg-white flex-shrink-0">
               <div className="text-center">
                 <div className="w-12 h-8 bg-gradient-to-b from-orange-500 via-white to-green-600 rounded"></div>
@@ -363,10 +351,9 @@ const BidhanSabhaRegistration = () => {
               </div>
             </div>
 
-            {/* Center Content */}
             <div className="flex-1 text-center px-3">
               <div className="text-lg font-semibold italic mb-2">
-                District :{" "}
+                District:{" "}
                 {district
                   ? cityOptions.find((opt) => opt.value === district)?.label ||
                     "Kishanganj"
@@ -377,7 +364,6 @@ const BidhanSabhaRegistration = () => {
               </div>
             </div>
 
-            {/* Right ECI Logo */}
             <div className="w-16 h-16 border-2 border-gray-300 rounded-full flex items-center justify-center bg-white flex-shrink-0">
               <div className="text-center">
                 <div className="w-12 h-8 bg-gradient-to-b from-orange-500 via-white to-green-600 rounded"></div>
@@ -386,7 +372,7 @@ const BidhanSabhaRegistration = () => {
             </div>
           </div>
 
-          {/* Photo Box */}
+          {/* Photo */}
           <div className="flex justify-center mb-6">
             <div className="w-44 h-56 border-2 border-gray-800 bg-gray-50 flex items-center justify-center overflow-hidden">
               {profilePhoto ? (
@@ -401,51 +387,12 @@ const BidhanSabhaRegistration = () => {
             </div>
           </div>
 
-          {/* Form Fields */}
+          {/* ID Card Details */}
           <div className="space-y-3">
-            {/* Name */}
-            <div className="flex items-center">
-              <div className="text-red-600 font-bold w-40 text-base">Name</div>
-              <div className="flex-1 border-b-2 border-dotted border-blue-800 pb-1 min-h-[28px]">
-                <span className="text-gray-900 text-base font-medium">
-                  {name}
-                </span>
-              </div>
-            </div>
-
-            {/* Designation */}
-            <div className="flex items-center">
-              <div className="text-red-600 font-bold w-40 text-base">
-                Designation
-              </div>
-              <div className="flex-1 border-b-2 border-dotted border-blue-800 pb-1 min-h-[28px]">
-                <span className="text-gray-900 text-base font-medium">
-                  {designation}
-                </span>
-              </div>
-            </div>
-
-            {/* Department */}
-            <div className="flex items-center">
-              <div className="text-red-600 font-bold w-40 text-base">
-                Dep. for Ele. Duty
-              </div>
-              <div className="flex-1 border-b-2 border-dotted border-blue-800 pb-1 min-h-[28px]">
-                <span className="text-gray-900 text-base font-medium">
-                  {department}
-                </span>
-              </div>
-            </div>
-
-            {/* Mobile */}
-            <div className="flex items-center">
-              <div className="text-red-600 font-bold w-40 text-base">Mob.:</div>
-              <div className="flex-1 border-b-2 border-dotted border-blue-800 pb-1 min-h-[28px]">
-                <span className="text-gray-900 text-base font-medium">
-                  {mobile}
-                </span>
-              </div>
-            </div>
+            <InfoRow label="Name" value={name} />
+            <InfoRow label="Designation" value={designation} />
+            <InfoRow label="Dep. for Ele. Duty" value={finalKusang} />
+            <InfoRow label="Mob.:" value={mobile} />
           </div>
 
           {/* Signatures */}
@@ -458,20 +405,11 @@ const BidhanSabhaRegistration = () => {
             </div>
             <div className="text-right">
               <div className="h-16 w-48 flex items-center justify-center mb-2">
-                {signatureImage ? (
-                  <img
-                    src={signatureImage}
-                    alt="Signature"
-                    className="max-h-full max-w-full object-contain"
-                  />
-                ) : (
-                  <div
-                    className="font-bold text-3xl italic"
-                    style={{ fontFamily: "cursive" }}
-                  >
-                    J.Kumar
-                  </div>
-                )}
+                <img
+                  src={signatureImage}
+                  alt="Signature"
+                  className="max-h-full max-w-full object-contain"
+                />
               </div>
               <div className="text-xs font-semibold">
                 Signature of Issuing Authority
@@ -492,16 +430,26 @@ const BidhanSabhaRegistration = () => {
           }
         }
       `}</style>
+
       <Modal data={uniqueID} isOpen={isModalOpen} onClose={closeModal} />
     </div>
   );
 };
 
-export default BidhanSabhaRegistration;
-const Spinner = () => {
-  return (
-    <div className="spinner-overlay">
-      <div className="spinner"></div>
+// ✅ Helper Component for consistent rows
+const InfoRow = ({ label, value }) => (
+  <div className="flex items-center">
+    <div className="text-red-600 font-bold w-40 text-base">{label}</div>
+    <div className="flex-1 border-b-2 border-dotted border-blue-800 pb-1 min-h-[28px]">
+      <span className="text-gray-900 text-base font-medium">{value}</span>
     </div>
-  );
-};
+  </div>
+);
+
+const Spinner = () => (
+  <div className="spinner-overlay">
+    <div className="spinner"></div>
+  </div>
+);
+
+export default BidhanSabhaRegistration;
