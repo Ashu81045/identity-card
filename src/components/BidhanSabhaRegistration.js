@@ -7,17 +7,13 @@ import { saveFormDataBS } from "../utitlities/services";
 import Modal from "./Modal";
 import { compressImage, readFileAsDataURL } from "../utitlities/utility";
 import { KusangOptions } from "../utitlities/const";
-import logo from '../assets/EC.png'
+import logo from "../assets/EC.png";
 
 const BidhanSabhaRegistration = () => {
   const [name, setName] = useState("");
   const [nameError, setNameError] = useState("");
   const [designation, setDesignation] = useState("");
   const [designationError, setDesignationError] = useState("");
-
-  // 🔸 Department state replaced with Kusang
-  // const [department, setDepartment] = useState("");
-  // const [departmentError, setDepartmentError] = useState("");
 
   const [mobile, setMobile] = useState("");
   const [mobileError, setMobileError] = useState("");
@@ -35,6 +31,7 @@ const BidhanSabhaRegistration = () => {
   const [otherKusangError, setOtherKusangError] = useState("");
   const [otherKusang, setOtherKusang] = useState("");
 
+  // ✅ Final Kusang (computed field)
   const finalKusang = kusang === "OTHER" ? `OTHER:${otherKusang}` : kusang;
 
   const cityOptions = [
@@ -55,13 +52,6 @@ const BidhanSabhaRegistration = () => {
     setDesignation(value);
     if (value) setDesignationError("");
   };
-
-  // ❌ Removed old department handler
-  // const handleDepartmentChange = (event) => {
-  //   const value = event.target.value;
-  //   setDepartment(value);
-  //   if (value) setDepartmentError("");
-  // };
 
   const handleMobileChange = (event) => {
     const value = event.target.value;
@@ -85,6 +75,23 @@ const BidhanSabhaRegistration = () => {
 
   const closeModal = () => setIsModalOpen(false);
 
+  const handleOtherKusangChange = (event) => {
+    const value = event.target.value;
+    setOtherKusang(value);
+    if (value.length >= 3) setOtherKusangError("");
+  };
+
+  const handleKushangSelect = (option) => {
+    setKushang(option.value);
+    setKusangError("");
+    setOtherKusang(""); // Reset when user changes from OTHER → normal
+  };
+
+  const handleDistrictSelect = (option) => {
+    setSetDistrict(option.value);
+    setDistrictError("");
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     let isValid = true;
@@ -104,7 +111,7 @@ const BidhanSabhaRegistration = () => {
       isValid = false;
     } else setDesignationError("");
 
-    // ✅ Kusang validation replaces department
+    // ✅ Kusang validation
     if (!kusang) {
       setKusangError("Please select a Kusang option.");
       isValid = false;
@@ -128,7 +135,6 @@ const BidhanSabhaRegistration = () => {
 
     if (isValid) {
       setIsLoading(true);
-      const finalKusang = kusang === "OTHER" ? `OTHER:${otherKusang}` : kusang;
       const formData = {
         name,
         phone: mobile,
@@ -137,7 +143,7 @@ const BidhanSabhaRegistration = () => {
         district,
         uniqueID: generateRandomID(district),
         approved: false,
-        // 🔸 Replaced department with finalKusang field
+        // 🔸 Replaced department → kushang
         department: finalKusang,
       };
 
@@ -151,31 +157,14 @@ const BidhanSabhaRegistration = () => {
         .catch((e) => {
           console.log(e);
           setIsLoading(false);
-          alert("error ", e);
+          alert("Error saving data. Please try again.");
         });
     }
-  };
-
-  const handleOtherKusangChange = (event) => {
-    const value = event.target.value;
-    setOtherKusang(value);
-    if (value.length >= 3) setOtherKusangError("");
-  };
-
-  const handleKushangSelect = (option) => {
-    setKushang(option.value);
-    if (option.value) setKusangError("");
-  };
-
-  const handleDistrictSelect = (option) => {
-    setSetDistrict(option.value);
-    setDistrictError("");
   };
 
   const resetForm = () => {
     setName("");
     setDesignation("");
-    // setDepartment("");
     setMobile("");
     setProfilePhoto(null);
     setSetDistrict("");
@@ -234,7 +223,7 @@ const BidhanSabhaRegistration = () => {
           </div>
 
           {/* ✅ Kusang Dropdown */}
-          <div className=" drop-down-container mb-5">
+          <div className="drop-down-container mb-5">
             <label className="block mb-2 font-medium text-gray-700">
               Dep. for Ele. Duty *:
             </label>
@@ -245,13 +234,16 @@ const BidhanSabhaRegistration = () => {
             {kusangError && <span className="error">{kusangError}</span>}
           </div>
 
+          {/* ✅ Show input when OTHER selected */}
           {kusang === "OTHER" && (
-            <div className="form-group">
-              <label>Please add Kusang *:</label>
+            <div className="form-group mb-5">
+              <label>Please specify other Kusang *:</label>
               <input
                 type="text"
                 value={otherKusang}
                 onChange={handleOtherKusangChange}
+                className="w-full px-4 py-2 border border-gray-300 rounded text-base box-border"
+                placeholder="Enter other Kusang name"
               />
               {otherKusangError && (
                 <span className="error">{otherKusangError}</span>
@@ -294,8 +286,6 @@ const BidhanSabhaRegistration = () => {
               </span>
             )}
           </div>
-
-          {/* ❌ Department Input — fully removed */}
 
           {/* Mobile */}
           <div className="mb-5">
@@ -345,13 +335,8 @@ const BidhanSabhaRegistration = () => {
 
           {/* District */}
           <div className="flex items-center justify-between mb-5">
-            {/* ECI Logos */}
-            <div className="w-12 h-12 border border-gray-300 rounded-full flex items-center justify-center bg-white flex-shrink-0 overflow-hidden">
-                <img
-                    src={logo}   // 👈 replace with your actual logo path or import
-                    alt="ECI Logo"
-                    className="w-full h-full object-cover"
-                />
+            <div className="w-12 h-12 border border-gray-300 rounded-full flex items-center justify-center bg-white overflow-hidden">
+              <img src={logo} alt="ECI Logo" className="w-full h-full object-cover" />
             </div>
 
             <div className="flex-1 text-center px-3">
@@ -367,12 +352,8 @@ const BidhanSabhaRegistration = () => {
               </div>
             </div>
 
-            <div className="w-12 h-12 border border-gray-300 rounded-full flex items-center justify-center bg-white flex-shrink-0">
-                <img
-                    src={logo} // Replace this with your actual image path
-                    alt="ECI Logo"
-                    className="w-full h-full object-contain rounded-full"
-                />
+            <div className="w-12 h-12 border border-gray-300 rounded-full flex items-center justify-center bg-white">
+              <img src={logo} alt="ECI Logo" className="w-full h-full object-contain rounded-full" />
             </div>
           </div>
 
@@ -440,7 +421,7 @@ const BidhanSabhaRegistration = () => {
   );
 };
 
-// ✅ Helper Component for consistent rows
+// ✅ Helper Component
 const InfoRow = ({ label, value }) => (
   <div className="flex items-center">
     <div className="text-red-600 font-bold w-40 text-base">{label}</div>

@@ -13,10 +13,11 @@ import CustomDropdown from "../components/CustomDropDown";
 import UpdateSignature from "../components/UpdateSignature";
 import { KusangOptions } from "../utitlities/const";
 import BulkIdPreviewBs from "../components/BulkIdPreviewBs";
-//import { addInitialDistrictOptions, addInitialKushangOptions } from "../utitlities/services";
+
+// ✅ Helper function to unify kushang / kusang / department access
+const getKushangValue = (item) => item?.kushang || item?.kusang || item?.department || "";
 
 const AdminPage = () => {
-  
   const [dataList, setDataList] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -24,7 +25,7 @@ const AdminPage = () => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const [filteredData, setFilteredData] = useState(dataList); // Initialize filteredData with all data
+  const [filteredData, setFilteredData] = useState(dataList);
   const [kushang, setKushang] = useState('');
   const [district, setDistrict] = useState('');
   const [type, setType] = useState('');
@@ -33,64 +34,54 @@ const AdminPage = () => {
     { label: "Araria", value: "AR" },
     { label: "Purnia", value: "PR" },
     { label: "Kishanganj", value: "KN" },
+    { label: "Madhepura", value: "MP" },
   ];
-useEffect(() => {
-  if (startDate && endDate) {
-      // Filter data based on date range, district, and Kushang value
-      const filtered = dataList.filter((item) => {
-          const date = new Date(extractDate(item.uniqueID));
-          const isWithinDateRange = date >= startDate && date <= endDate;
-          const isKushangMatched = kushang ?
-              (item.kusang === kushang || (kushang.startsWith("OTHER") && item.kusang.startsWith("OTHER:"))) :
-              true;
-          const isDistrictMatched = district ? item.district === district : true;
-          return isWithinDateRange && isKushangMatched && isDistrictMatched;
-      });
-      setFilteredData(filtered);
-  } else if (kushang) {
-      // Filter data based on Kushang value and district if no date range selected
-      const filtered = dataList.filter((item) => {
-          const isKushangMatched = item.kusang === kushang || (kushang.startsWith("OTHER") && item.kusang.startsWith("OTHER:"));
-          const isDistrictMatched = district ? item.district === district : true;
-          return isKushangMatched && isDistrictMatched;
-      });
-      setFilteredData(filtered);
-  } else if (district) {
-      // Filter data based on district if no date range or Kushang selected
-      const filtered = dataList.filter((item) => item.district === district);
-      setFilteredData(filtered);
-  } else {
-      // If no date range, Kushang, or district selected, show all data
-      setFilteredData(dataList);
-  }
-}, [startDate, endDate, dataList, kushang, district]);
 
+  // ✅ Updated filtering logic (unified kushang/department support)
+  useEffect(() => {
+    const filtered = dataList.filter((item) => {
+      const date = new Date(extractDate(item.uniqueID));
+      const kushangValue = getKushangValue(item);
+
+      const isWithinDateRange = startDate && endDate ? (date >= startDate && date <= endDate) : true;
+      const isKushangMatched = kushang
+        ? (
+            kushangValue === kushang ||
+            (kushang.startsWith("OTHER") && kushangValue.startsWith("OTHER:"))
+          )
+        : true;
+      const isDistrictMatched = district ? item.district === district : true;
+
+      return isWithinDateRange && isKushangMatched && isDistrictMatched;
+    });
+
+    setFilteredData(filtered);
+  }, [startDate, endDate, dataList, kushang, district]);
 
   useEffect(() => {
     setIsLoading(true);
-    if(isLoggedIn && type==='ls'){
+    if (isLoggedIn && type === 'ls') {
       retrieveAllData()
-      .then(data => {
-        setIsLoading(false);
-        setDataList(data);
-      }).catch( e => {
-        setIsLoading(false);
-        console.log(e)
-      });
+        .then(data => {
+          setIsLoading(false);
+          setDataList(data);
+        }).catch(e => {
+          setIsLoading(false);
+          console.log(e);
+        });
     }
-    if(isLoggedIn && type==='bs'){
+    if (isLoggedIn && type === 'bs') {
       retrieveAllDataBs()
-      .then(data => {
-        setIsLoading(false);
-        setDataList(data);
-      }).catch( e => {
-        setIsLoading(false);
-        console.log(e)
-      });
+        .then(data => {
+          setIsLoading(false);
+          setDataList(data);
+        }).catch(e => {
+          setIsLoading(false);
+          console.log(e);
+        });
     }
-  }, [isLoggedIn,type]);
+  }, [isLoggedIn, type]);
 
-  // Handle login logic
   const handleLogin = (mobileNumber, password) => {
     if ((mobileNumber === "9667833075" || "9470062768") && password === "Admin@12345!") {
       setIsLoggedIn(true);
@@ -99,38 +90,31 @@ useEffect(() => {
     }
   };
 
-  // Handle approve button click
   const handleApprove = (id) => {
     setIsLoading(true);
-    updateDocument(id, true,type)
-    .then(() => { 
-      setIsLoading(false);
-      alert("You have successfully approved!");
-    })
-    .catch(() => setIsLoading(false));
+    updateDocument(id, true, type)
+      .then(() => {
+        setIsLoading(false);
+        alert("You have successfully approved!");
+      })
+      .catch(() => setIsLoading(false));
   };
 
-  // Handle decline button click
   const handleDecline = (id) => {
     setIsLoading(true);
-    updateDocument(id, false,type)
-    .then(() => setIsLoading(false))
-    .catch(() => setIsLoading(false));
+    updateDocument(id, false, type)
+      .then(() => setIsLoading(false))
+      .catch(() => setIsLoading(false));
   };
 
-  // Handle dropdown select for kushang
   const handleKushangSelect = (option) => {
-    setKushang(option.value); 
+    setKushang(option.value);
   };
-  const handleDistrictSelect = (option) =>{
-    setDistrict(option.value);
-  }
-  // const setInitialValue = () =>{
-  //   addInitialDistrictOptions(cityOptions);
-  // addInitialKushangOptions(KusangOptions);
-  // }
 
-  // Handle reset button click
+  const handleDistrictSelect = (option) => {
+    setDistrict(option.value);
+  };
+
   const handleReset = () => {
     setStartDate(null);
     setEndDate(null);
@@ -138,7 +122,6 @@ useEffect(() => {
     setDistrict('');
   };
 
-  // Toggle modal
   const toggleModal = (item) => {
     setSelectedItem(item);
     setShowModal(!showModal);
@@ -149,53 +132,52 @@ useEffect(() => {
       <Header />
       <div style={{ margin: "1rem" }}>
         {!isLoggedIn && <LoginForm onLogin={handleLogin} />}
-        {isLoggedIn && type==='' && (
+        {isLoggedIn && type === '' && (
           <>
-          <button onClick={()=>{setType('bs')}}>Vidhan Sabha</button>
-          <button onClick={()=>{setType('ls')}}>Lok Sabha</button>
+            <button onClick={() => { setType('bs'); }}>Vidhan Sabha</button>
+            <button onClick={() => { setType('ls'); }}>Lok Sabha</button>
           </>
         )}
-        {isLoggedIn && type ==='ls' && (
+        {isLoggedIn && type === 'ls' && (
           <React.Fragment>
             <div className="filter-card">
               <div className="filter-class">
-              <p className="para-text">Please select date range</p>
-              <div className="para-text">
-                <DatePicker
-                  selected={startDate}
-                  onChange={(date) => setStartDate(date)}
-                  selectsStart
-                  startDate={startDate}
-                  endDate={endDate}
-                  placeholderText="From"
-                />
-                <DatePicker
-                  selected={endDate}
-                  onChange={(date) => setEndDate(date)}
-                  selectsEnd
-                  startDate={startDate}
-                  endDate={endDate}
-                  placeholderText="To"
-                  minDate={startDate}
-                />
+                <p className="para-text">Please select date range</p>
+                <div className="para-text">
+                  <DatePicker
+                    selected={startDate}
+                    onChange={(date) => setStartDate(date)}
+                    selectsStart
+                    startDate={startDate}
+                    endDate={endDate}
+                    placeholderText="From"
+                  />
+                  <DatePicker
+                    selected={endDate}
+                    onChange={(date) => setEndDate(date)}
+                    selectsEnd
+                    startDate={startDate}
+                    endDate={endDate}
+                    placeholderText="To"
+                    minDate={startDate}
+                  />
+                </div>
+                <div className="kusang-cont">
+                  <label>Select District</label>
+                  <CustomDropdown options={cityOptions} onSelect={handleDistrictSelect} />
+                </div>
+                <div className="kusang-cont">
+                  <label>Select Kusang</label>
+                  <CustomDropdown options={KusangOptions} onSelect={handleKushangSelect} />
+                </div>
+                <p className="para-text">Number of ID: {filteredData.length}</p>
+                <button className="reset-button" onClick={handleReset}>Reset All filters</button>
+                <BulkPDFDownloadButton userList={filteredData} />
               </div>
-              <div className="kusang-cont">
-                <label>Select District</label>
-                <CustomDropdown options={cityOptions} onSelect={handleDistrictSelect} />
-              </div>
-              <div className="kusang-cont">
-                <label>Select Kusang</label>
-                <CustomDropdown options={KusangOptions} onSelect={handleKushangSelect} />
-              </div>
-              <p className="para-text">Number of ID: {filteredData.length}</p>
-              <button className="reset-button" onClick={handleReset}>Reset All filters</button>
-              <BulkPDFDownloadButton userList={filteredData} />
-              </div>
-              <div className="seperator"/>
+              <div className="seperator" />
               <div className="signature-class">
-                <UpdateSignature/>
+                <UpdateSignature />
               </div>
-             
             </div>
             {isLoading && <Spinner />}
             {filteredData.map((item) => (
@@ -218,50 +200,52 @@ useEffect(() => {
                 </div>
               </div>
             ))}
-            
           </React.Fragment>
         )}
-        {isLoggedIn && type ==='bs' && (
+        {isLoggedIn && type === 'bs' && (
           <React.Fragment>
             <div className="filter-card">
               <div className="filter-class">
-              <p className="para-text">Please select date range</p>
-              <div className="para-text">
-                <DatePicker
-                  selected={startDate}
-                  onChange={(date) => setStartDate(date)}
-                  selectsStart
-                  startDate={startDate}
-                  endDate={endDate}
-                  placeholderText="From"
-                />
-                <DatePicker
-                  selected={endDate}
-                  onChange={(date) => setEndDate(date)}
-                  selectsEnd
-                  startDate={startDate}
-                  endDate={endDate}
-                  placeholderText="To"
-                  minDate={startDate}
-                />
+                <p className="para-text">Please select date range</p>
+                <div className="para-text">
+                  <DatePicker
+                    selected={startDate}
+                    onChange={(date) => setStartDate(date)}
+                    selectsStart
+                    startDate={startDate}
+                    endDate={endDate}
+                    placeholderText="From"
+                  />
+                  <DatePicker
+                    selected={endDate}
+                    onChange={(date) => setEndDate(date)}
+                    selectsEnd
+                    startDate={startDate}
+                    endDate={endDate}
+                    placeholderText="To"
+                    minDate={startDate}
+                  />
+                </div>
+                <div className="kusang-cont">
+                  <label>Select District</label>
+                  <CustomDropdown options={cityOptions} onSelect={handleDistrictSelect} />
+                </div>
+                <div className="kusang-cont">
+                  <label>Select Kusang</label>
+                  <CustomDropdown options={KusangOptions} onSelect={handleKushangSelect} />
+                </div>
+                <p className="para-text">Number of ID: {filteredData.length}</p>
+                <button className="reset-button" onClick={handleReset}>Reset All filters</button>
+                {type === 'ls' ? (
+                  <BulkPDFDownloadButton userList={filteredData} />
+                ) : (
+                  <BulkIdPreviewBs userList={filteredData} />
+                )}
               </div>
-              <div className="kusang-cont">
-                <label>Select District</label>
-                <CustomDropdown options={cityOptions} onSelect={handleDistrictSelect} />
-              </div>
-              {/* <div className="kusang-cont">
-                <label>Select Kusang</label>
-                <CustomDropdown options={KusangOptions} onSelect={handleKushangSelect} />
-              </div> */}
-              <p className="para-text">Number of ID: {filteredData.length}</p>
-              <button className="reset-button" onClick={handleReset}>Reset All filters</button>
-              {type==='ls'?(<BulkPDFDownloadButton userList={filteredData} />):(<BulkIdPreviewBs userList={filteredData}/>)}
-              </div>
-              <div className="seperator"/>
+              <div className="seperator" />
               <div className="signature-class">
-                <UpdateSignature/>
+                <UpdateSignature />
               </div>
-             
             </div>
             {isLoading && <Spinner />}
             {filteredData.map((item) => (
@@ -283,11 +267,9 @@ useEffect(() => {
                   </div>
                 </div>
               </div>
-            ))
-          })
+            ))}
           </React.Fragment>
-          )}
-            
+        )}
       </div>
       {showModal && (
         <PreviewModal onClose={() => setShowModal(false)}>
